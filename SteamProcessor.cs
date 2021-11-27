@@ -4,7 +4,6 @@ using System.Security.Authentication;
 using OpenQA.Selenium;
 using SteamGuard.TOTP;
 
-using NuciWeb;
 using NuciWeb.Steam.Models;
 
 namespace NuciWeb.Steam
