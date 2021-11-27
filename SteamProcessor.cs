@@ -2,6 +2,7 @@ using System;
 using System.Security.Authentication;
 
 using OpenQA.Selenium;
+using SteamGuard.TOTP;
 
 using NuciWeb;
 using NuciWeb.Steam.Models;
@@ -17,10 +18,19 @@ namespace NuciWeb.Steam
         public string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
 
         readonly IWebProcessor webProcessor;
+        readonly ISteamGuard steamGuard;
 
         public SteamProcessor(IWebProcessor webProcessor)
+            : this(webProcessor, new SteamGuard.TOTP.SteamGuard())
+        {
+        }
+
+        public SteamProcessor(
+            IWebProcessor webProcessor,
+            ISteamGuard steamGuard)
         {
             this.webProcessor = webProcessor;
+            this.steamGuard = steamGuard;
         }
 
         public void LogIn(SteamAccount account)
@@ -34,6 +44,11 @@ namespace NuciWeb.Steam
             By errorBoxSelector = By.Id("error_display");
             By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
             By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
+
+            if (webProcessor.IsElementVisible(avatarSelector))
+            {
+                ValidateCurrentSession(account.Username);
+            }
 
             if (webProcessor.IsElementVisible(avatarSelector))
             {
@@ -56,14 +71,10 @@ namespace NuciWeb.Steam
 
             if (webProcessor.IsElementVisible(steamGuardCodeInputSelector))
             {
-                throw new AuthenticationException("Steam Guard input required.");
+                InputSteamGuardCode(account.TotpKey);
             }
             
-            if (webProcessor.IsElementVisible(errorBoxSelector))
-            {
-                string errorMessage = webProcessor.GetText(errorBoxSelector);
-                throw new AuthenticationException(errorMessage);
-            }
+            ValidateLogInResult();
         }
 
         public void FavouriteWorkshopItem(string workshopItemId)
@@ -99,6 +110,65 @@ namespace NuciWeb.Steam
 
             webProcessor.Click(subscribeButtonSelector);
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
+        }
+
+        void ValidateCurrentSession(string expectedUsername)
+        {
+            By accountPulldownSelector = By.Id("account_pulldown");
+            By onlinePersonaSelector = By.XPath("//span[contains(@class,'online')]");
+
+            webProcessor.Click(accountPulldownSelector);
+            webProcessor.WaitForAnyElementToBeVisible(onlinePersonaSelector);
+
+            string currentUsername = webProcessor.GetText(onlinePersonaSelector).Trim();
+
+            if (!currentUsername.Equals(expectedUsername, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new AuthenticationException("Already logged in as a different user.");
+            }
+        }
+
+        void ValidateLogInResult()
+        {
+            By avatarSelector = By.XPath("//a[contains(@class,'user_avatar')]");
+            By errorBoxSelector = By.Id("error_display");
+            By steamGuardIncorrectMessageSelector = By.Id("login_twofactorauth_message_incorrectcode");
+
+            webProcessor.WaitForAnyElementToBeVisible(
+                avatarSelector,
+                steamGuardIncorrectMessageSelector,
+                errorBoxSelector);
+            
+            if (webProcessor.IsElementVisible(errorBoxSelector))
+            {
+                string errorMessage = webProcessor.GetText(errorBoxSelector);
+                throw new AuthenticationException(errorMessage);
+            }
+            else if (webProcessor.IsElementVisible(steamGuardIncorrectMessageSelector))
+            {
+                throw new AuthenticationException("The provided Steam Guard code is not valid.");
+            }
+            else if (!webProcessor.IsElementVisible(avatarSelector))
+            {
+                throw new AuthenticationException("Authentication failure.");
+            }
+        }
+
+        void InputSteamGuardCode(string totpKey)
+        {
+            if (string.IsNullOrWhiteSpace(totpKey))
+            {
+                throw new ArgumentNullException(nameof(totpKey));
+            }
+
+            By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
+            By steamGuardSubmitButtonSelector = By.XPath("//*[@id='login_twofactorauth_buttonset_entercode']/div[1]");
+
+            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
+
+            string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
+            webProcessor.SetText(steamGuardCodeInputSelector, steamGuardCode);
+            webProcessor.Click(steamGuardSubmitButtonSelector);
         }
 
         void GoToWorksopItemPage(string workshopItemId)
