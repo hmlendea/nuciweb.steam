@@ -13,6 +13,9 @@ namespace NuciWeb.Steam
         public static string StoreUrl => "https://store.steampowered.com";
         public static string CommunityUrl => "https://steamcommunity.com";
 
+        public static string AccountUrl => $"{StoreUrl}/account";
+        public static string ChatUrl => $"{CommunityUrl}/chat";
+        public static string CookiePreferencesUrl => $"{AccountUrl}/cookiepreferences";
         public static string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
         public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
         public static string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
@@ -76,6 +79,33 @@ namespace NuciWeb.Steam
             
             ValidateLogInResult();
         }
+
+        public void AcceptCookies()
+        {
+            webProcessor.GoToUrl(CookiePreferencesUrl);
+
+            By acceptAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[2]");
+
+            webProcessor.Click(acceptAllButtonSelector);
+        }
+
+        public void RejectCookies()
+        {
+            webProcessor.GoToUrl(CookiePreferencesUrl);
+
+            By rejectAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[1]");
+
+            webProcessor.Click(rejectAllButtonSelector);
+        }
+        public void VisitChat()
+        {
+            webProcessor.GoToUrl(ChatUrl);
+
+            By avatarSelector = By.ClassName("currentUserAvatar");
+
+            webProcessor.WaitForElementToExist(avatarSelector);
+        }
+
         /// <summary>
         /// Activates the given key on the current account.
         /// </summary>
@@ -113,17 +143,25 @@ namespace NuciWeb.Steam
         {
             GoToWorksopItemPage(workshopItemId);
 
-            By favouriteButtonSelector = By.Id("FavoriteItemOptionAdd");
+            By favouriteButton1Selector = By.Id("FavoriteItemOptionAdd");
+            By favouriteButton2Selector = By.Id("FavoriteItemBtn");
             By unfavouriteButtonSelector = By.Id("FavoriteItemOptionFavorited");
             By favouritedNoticeSelector = By.Id("JustFavorited");
 
+            webProcessor.WaitForAnyElementToBeVisible(
+                favouriteButton1Selector,
+                favouriteButton2Selector,
+                unfavouriteButtonSelector);
 
             if (webProcessor.IsElementVisible(unfavouriteButtonSelector))
             {
                 return;
             }
 
-            webProcessor.Click(favouriteButtonSelector);
+            webProcessor.ClickAny(
+                favouriteButton1Selector,
+                favouriteButton2Selector);
+
             webProcessor.WaitForElementToBeVisible(favouritedNoticeSelector);
         }
 
@@ -131,16 +169,36 @@ namespace NuciWeb.Steam
         {
             GoToWorksopItemPage(workshopItemId);
 
-            By subscribeButtonSelector = By.Id("SubscribeItemOptionAdd");
+            By subscribeButton1Selector = By.Id("SubscribeItemOptionAdd");
+            By subscribeButton2Selector = By.Id("SubscribeItemBtn");
             By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
             By subscribedNoticeSelector = By.Id("JustSubscribed");
+            By requiredItemSelector = By.ClassName("requiredItem");
+
+            webProcessor.WaitForAnyElementToBeVisible(
+                subscribeButton1Selector,
+                subscribeButton2Selector,
+                unsubscribeButtonSelector);
 
             if (webProcessor.IsElementVisible(unsubscribeButtonSelector))
             {
                 return;
             }
 
-            webProcessor.Click(subscribeButtonSelector);
+            webProcessor.ClickAny(
+                subscribeButton1Selector,
+                subscribeButton2Selector);
+
+            webProcessor.WaitForAnyElementToBeVisible(
+                subscribedNoticeSelector,
+                requiredItemSelector);
+            
+            if (webProcessor.IsElementVisible(requiredItemSelector))
+            {
+                By continueButtonSelector = By.XPath("//div[@class='newmodal_buttons']/div[1]/span");
+                webProcessor.Click(continueButtonSelector);
+            }
+
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
         }
 
