@@ -173,6 +173,7 @@ namespace NuciWeb.Steam
             By subscribeButton2Selector = By.Id("SubscribeItemBtn");
             By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
             By subscribedNoticeSelector = By.Id("JustSubscribed");
+            By modalDialogSelector = By.ClassName("newmodal");
             By requiredItemSelector = By.ClassName("requiredItem");
 
             webProcessor.WaitForAnyElementToBeVisible(
@@ -191,9 +192,9 @@ namespace NuciWeb.Steam
 
             webProcessor.WaitForAnyElementToBeVisible(
                 subscribedNoticeSelector,
-                requiredItemSelector);
+                modalDialogSelector);
             
-            if (webProcessor.IsElementVisible(requiredItemSelector))
+            if (webProcessor.AreAllElementsVisible(modalDialogSelector, requiredItemSelector))
             {
                 By continueButtonSelector = By.XPath("//div[@class='newmodal_buttons']/div[1]/span");
                 webProcessor.Click(continueButtonSelector);
