@@ -3,3 +3,17 @@
 # About
 
 NuGet package to execute common Steam operations using [NuciWeb](https://github.com/hmlendea/nuciweb).
+
+# Installation
+
+[![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciWeb.Steam)
+
+**.NET CLI**:
+```bash
+dotnet add package NuciWeb.Steam
+```
+
+**Package Manager**:
+```powershell
+Install-Package NuciWeb.Steam
+```
