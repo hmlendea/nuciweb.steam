@@ -66,14 +66,31 @@ namespace NuciWeb.Steam
             }
         }
 
+        public void FavouriteWorkshopItem(string workshopItemId)
+        {
+            GoToWorksopItemPage(workshopItemId);
+
+            By favouriteButtonSelector = By.Id("FavoriteItemOptionAdd");
+            By unfavouriteButtonSelector = By.Id("FavoriteItemOptionFavorited");
+            By favouritedNoticeSelector = By.Id("JustFavorited");
+
+
+            if (webProcessor.IsElementVisible(unfavouriteButtonSelector))
+            {
+                return;
+            }
+
+            webProcessor.Click(favouriteButtonSelector);
+            webProcessor.WaitForElementToBeVisible(favouritedNoticeSelector);
+        }
+
         public void SubscribeToWorkshopItem(string workshopItemId)
         {
-            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
-
-            webProcessor.GoToUrl(workshopItemUrl);
+            GoToWorksopItemPage(workshopItemId);
 
             By subscribeButtonSelector = By.Id("SubscribeItemOptionAdd");
             By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
+            By subscribedNoticeSelector = By.Id("JustSubscribed");
 
             if (webProcessor.IsElementVisible(unsubscribeButtonSelector))
             {
@@ -81,10 +98,17 @@ namespace NuciWeb.Steam
             }
 
             webProcessor.Click(subscribeButtonSelector);
+            webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
+        }
 
-            By justSubscribedNoticeSelector = By.Id("JustSubscribed");
+        void GoToWorksopItemPage(string workshopItemId)
+        {
+            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
 
-            webProcessor.WaitForElementToBeVisible(justSubscribedNoticeSelector);
+            By mainContentSelector = By.Id("mainContents");
+
+            webProcessor.GoToUrl(workshopItemUrl);
+            webProcessor.WaitForElementToBeVisible(mainContentSelector);
         }
     }
 }
