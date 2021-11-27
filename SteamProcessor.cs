@@ -11,11 +11,12 @@ namespace NuciWeb.Steam
 {
     public sealed class SteamProcessor : ISteamProcessor
     {
-        public string StoreUrl => "https://store.steampowered.com";
-        public string CommunityUrl => "https://steamcommunity.com";
+        public static string StoreUrl => "https://store.steampowered.com";
+        public static string CommunityUrl => "https://steamcommunity.com";
 
-        public string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
-        public string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
+        public static string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
+        public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
+        public static string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
 
         readonly IWebProcessor webProcessor;
         readonly ISteamGuard steamGuard;
@@ -76,6 +77,38 @@ namespace NuciWeb.Steam
             
             ValidateLogInResult();
         }
+        /// <summary>
+        /// Activates the given key on the current account.
+        /// </summary>
+        /// <returns>The name of the activated product.</returns>
+        /// <param name="key">The product key.</param>
+        public string ActivateKey(string key)
+        {
+            By keyInputSelector = By.Id("product_key");
+            By keyActivationButtonSelector = By.Id("register_btn");
+            By agreementCheckboxSelector = By.Id("accept_ssa");
+
+            By errorSelector = By.Id("error_display");
+            By receiptSelector = By.Id("receipt_form");
+
+            By productNameSelector = By.ClassName("registerkey_lineitem");
+
+            if (!webProcessor.IsElementVisible(keyInputSelector))
+            {
+                webProcessor.GoToUrl(KeyActivationUrl);
+            }
+
+            webProcessor.SetText(keyInputSelector, key);
+            webProcessor.UpdateCheckbox(agreementCheckboxSelector, true);
+
+            webProcessor.Click(keyActivationButtonSelector);
+
+            webProcessor.WaitForAnyElementToBeVisible(errorSelector, receiptSelector);
+
+            ValidateKeyActivation();
+            
+            return webProcessor.GetText(productNameSelector);
+        }
 
         public void FavouriteWorkshopItem(string workshopItemId)
         {
@@ -110,6 +143,33 @@ namespace NuciWeb.Steam
 
             webProcessor.Click(subscribeButtonSelector);
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
+        }
+
+        void InputSteamGuardCode(string totpKey)
+        {
+            if (string.IsNullOrWhiteSpace(totpKey))
+            {
+                throw new ArgumentNullException(nameof(totpKey));
+            }
+
+            By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
+            By steamGuardSubmitButtonSelector = By.XPath("//*[@id='login_twofactorauth_buttonset_entercode']/div[1]");
+
+            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
+
+            string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
+            webProcessor.SetText(steamGuardCodeInputSelector, steamGuardCode);
+            webProcessor.Click(steamGuardSubmitButtonSelector);
+        }
+
+        void GoToWorksopItemPage(string workshopItemId)
+        {
+            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
+
+            By mainContentSelector = By.Id("mainContents");
+
+            webProcessor.GoToUrl(workshopItemUrl);
+            webProcessor.WaitForElementToBeVisible(mainContentSelector);
         }
 
         void ValidateCurrentSession(string expectedUsername)
@@ -154,31 +214,74 @@ namespace NuciWeb.Steam
             }
         }
 
-        void InputSteamGuardCode(string totpKey)
+        void ValidateKeyActivation()
         {
-            if (string.IsNullOrWhiteSpace(totpKey))
+            By errorSelector = By.Id("error_display");
+
+            if (!webProcessor.IsElementVisible(errorSelector))
             {
-                throw new ArgumentNullException(nameof(totpKey));
+                return;
+            }
+            
+            string errorMessage = webProcessor.GetText(errorSelector);
+
+            if (errorMessage.Contains("is not valid") ||
+                errorMessage.Contains("nu este valid"))
+            {
+                throw new KeyActivationException(
+                    "Invalid product key.",
+                    KeyActivationErrorCode.InvalidProductKey);
             }
 
-            By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
-            By steamGuardSubmitButtonSelector = By.XPath("//*[@id='login_twofactorauth_buttonset_entercode']/div[1]");
+            if (errorMessage.Contains("activated by a different Steam account") ||
+                errorMessage.Contains("activat de un cont Steam diferit"))
+            {
+                throw new KeyActivationException(
+                    "Key already activated by a different account.",
+                    KeyActivationErrorCode.AlreadyActivatedDifferentAccount);
+            }
 
-            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
+            if (errorMessage.Contains("This Steam account already owns the product") ||
+                errorMessage.Contains("Contul acesta Steam deține deja produsul"))
+            {
+                throw new KeyActivationException(
+                    "Product already owned by this account.",
+                    KeyActivationErrorCode.AlreadyActivatedCurrentAccount);
+            }
 
-            string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
-            webProcessor.SetText(steamGuardCodeInputSelector, steamGuardCode);
-            webProcessor.Click(steamGuardSubmitButtonSelector);
-        }
+            if (errorMessage.Contains("requires ownership of another product") ||
+                errorMessage.Contains("necesită deținerea unui alt produs"))
+            {
+                throw new KeyActivationException(
+                    "A base product is required in order to activate this key.",
+                    KeyActivationErrorCode.BaseProductRequired);
+            }
 
-        void GoToWorksopItemPage(string workshopItemId)
-        {
-            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
+            if (errorMessage.Contains("this product is not available for purchase in this country") ||
+                errorMessage.Contains("acest produs nu este disponibil pentru achiziție în această țară"))
+            {
+                throw new KeyActivationException(
+                    "The key is locked to a specific region.",
+                    KeyActivationErrorCode.RegionLocked);
+            }
 
-            By mainContentSelector = By.Id("mainContents");
+            if (errorMessage.Contains("too many recent activation attempts") ||
+                errorMessage.Contains("prea multe încercări de activare recente"))
+            {
+                throw new KeyActivationException(
+                    "Key activation limit reached.",
+                    KeyActivationErrorCode.TooManyAttempts);
+            }
 
-            webProcessor.GoToUrl(workshopItemUrl);
-            webProcessor.WaitForElementToBeVisible(mainContentSelector);
+            if (errorMessage.Contains("An unexpected error has occurred") ||
+                errorMessage.Contains("A apărut o eroare neașteptată"))
+            {
+                throw new KeyActivationException(
+                    "An unexpected error has occurred.",
+                    KeyActivationErrorCode.Unexpected);
+            }
+
+            throw new KeyActivationException(errorMessage);
         }
     }
 }
