@@ -10,6 +10,8 @@ namespace NuciWeb.Steam
 
         void RejectCookies();
 
+        void VisitChat();
+
         string ActivateKey(string key);
 
         void FavouriteWorkshopItem(string workshopItemId);

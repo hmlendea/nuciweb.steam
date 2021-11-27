@@ -14,6 +14,7 @@ namespace NuciWeb.Steam
         public static string CommunityUrl => "https://steamcommunity.com";
 
         public static string AccountUrl => $"{StoreUrl}/account";
+        public static string ChatUrl => $"{CommunityUrl}/chat";
         public static string CookiePreferencesUrl => $"{AccountUrl}/cookiepreferences";
         public static string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
         public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
@@ -95,6 +96,14 @@ namespace NuciWeb.Steam
             By rejectAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[1]");
 
             webProcessor.Click(rejectAllButtonSelector);
+        }
+        public void VisitChat()
+        {
+            webProcessor.GoToUrl(ChatUrl);
+
+            By avatarSelector = By.ClassName("currentUserAvatar");
+
+            webProcessor.WaitForElementToExist(avatarSelector);
         }
 
         /// <summary>
