@@ -151,7 +151,9 @@ namespace NuciWeb.Steam
         {
             GoToWorksopItemPage(workshopItemId);
 
-            By subscribeButtonSelector = By.Id("SubscribeItemOptionAdd");
+            By subscribeButton1Selector = By.Id("SubscribeItemOptionAdd");
+            By subscribeButton2Selector = By.Id("SubscribeItemBtn");
+
             By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
             By subscribedNoticeSelector = By.Id("JustSubscribed");
             By requiredItemSelector = By.ClassName("requiredItem");
@@ -161,7 +163,13 @@ namespace NuciWeb.Steam
                 return;
             }
 
-            webProcessor.Click(subscribeButtonSelector);
+            webProcessor.WaitForAnyElementToBeVisible(
+                subscribeButton1Selector,
+                subscribeButton2Selector);
+
+            webProcessor.ClickAny(
+                subscribeButton1Selector,
+                subscribeButton2Selector);
             
             webProcessor.WaitForAnyElementToBeVisible(
                 subscribedNoticeSelector,
