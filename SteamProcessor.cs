@@ -138,7 +138,6 @@ namespace NuciWeb.Steam
             By unfavouriteButtonSelector = By.Id("FavoriteItemOptionFavorited");
             By favouritedNoticeSelector = By.Id("JustFavorited");
 
-
             if (webProcessor.IsElementVisible(unfavouriteButtonSelector))
             {
                 return;
@@ -155,6 +154,7 @@ namespace NuciWeb.Steam
             By subscribeButtonSelector = By.Id("SubscribeItemOptionAdd");
             By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
             By subscribedNoticeSelector = By.Id("JustSubscribed");
+            By requiredItemSelector = By.ClassName("requiredItem");
 
             if (webProcessor.IsElementVisible(unsubscribeButtonSelector))
             {
@@ -162,6 +162,17 @@ namespace NuciWeb.Steam
             }
 
             webProcessor.Click(subscribeButtonSelector);
+            
+            webProcessor.WaitForAnyElementToBeVisible(
+                subscribedNoticeSelector,
+                requiredItemSelector);
+            
+            if (webProcessor.IsElementVisible(requiredItemSelector))
+            {
+                By continueButtonSelector = By.XPath("//div[@class='newmodal_buttons']/div[1]/span");
+                webProcessor.Click(continueButtonSelector);
+            }
+
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
         }
 
