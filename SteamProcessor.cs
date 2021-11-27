@@ -10,8 +10,11 @@ namespace NuciWeb.Steam
 {
     public sealed class SteamProcessor : ISteamProcessor
     {
-        public string HomePageUrl => "https://store.steampowered.com";
-        public string LoginUrl => $"{HomePageUrl}/login/?redir=&redir_ssl=1";
+        public string StoreUrl => "https://store.steampowered.com";
+        public string CommunityUrl => "https://steamcommunity.com";
+
+        public string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
+        public string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
 
         readonly IWebProcessor webProcessor;
 
@@ -61,7 +64,27 @@ namespace NuciWeb.Steam
                 string errorMessage = webProcessor.GetText(errorBoxSelector);
                 throw new AuthenticationException(errorMessage);
             }
+        }
 
+        public void SubscribeToWorkshopItem(string workshopItemId)
+        {
+            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
+
+            webProcessor.GoToUrl(workshopItemUrl);
+
+            By subscribeButtonSelector = By.Id("SubscribeItemOptionAdd");
+            By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
+
+            if (webProcessor.IsElementVisible(unsubscribeButtonSelector))
+            {
+                return;
+            }
+
+            webProcessor.Click(subscribeButtonSelector);
+
+            By justSubscribedNoticeSelector = By.Id("JustSubscribed");
+
+            webProcessor.WaitForElementToBeVisible(justSubscribedNoticeSelector);
         }
     }
 }
