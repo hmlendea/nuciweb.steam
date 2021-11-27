@@ -13,6 +13,8 @@ namespace NuciWeb.Steam
         public static string StoreUrl => "https://store.steampowered.com";
         public static string CommunityUrl => "https://steamcommunity.com";
 
+        public static string AccountUrl => $"{StoreUrl}/account";
+        public static string CookiePreferencesUrl => $"{AccountUrl}/cookiepreferences";
         public static string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
         public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
         public static string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
@@ -76,6 +78,25 @@ namespace NuciWeb.Steam
             
             ValidateLogInResult();
         }
+
+        public void AcceptCookies()
+        {
+            webProcessor.GoToUrl(CookiePreferencesUrl);
+
+            By acceptAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[2]");
+
+            webProcessor.Click(acceptAllButtonSelector);
+        }
+
+        public void RejectCookies()
+        {
+            webProcessor.GoToUrl(CookiePreferencesUrl);
+
+            By rejectAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[1]");
+
+            webProcessor.Click(rejectAllButtonSelector);
+        }
+
         /// <summary>
         /// Activates the given key on the current account.
         /// </summary>

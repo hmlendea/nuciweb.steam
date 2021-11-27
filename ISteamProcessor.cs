@@ -6,6 +6,10 @@ namespace NuciWeb.Steam
     {
         void LogIn(SteamAccount account);
 
+        void AcceptCookies();
+
+        void RejectCookies();
+
         string ActivateKey(string key);
 
         void FavouriteWorkshopItem(string workshopItemId);
