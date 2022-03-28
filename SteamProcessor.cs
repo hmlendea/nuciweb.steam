@@ -80,6 +80,17 @@ namespace NuciWeb.Steam
             ValidateLogInResult();
         }
 
+        public void SetProfileName(string profileName)
+        {
+            By profileNameSelector = By.Name("personaName");
+            By saveButtonSelector = By.XPath(@"//div[contains(@class,'profileedit_SaveCancelButtons')]/button[@type='submit'][1]");
+
+            GoToEditProfilePage();
+
+            webProcessor.SetText(profileNameSelector, profileName);
+            webProcessor.Click(saveButtonSelector);
+        }
+
         public void AcceptCookies()
         {
             webProcessor.GoToUrl(CookiePreferencesUrl);
@@ -201,6 +212,26 @@ namespace NuciWeb.Steam
             }
 
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
+        }
+
+        void GoToProfilePage()
+        {
+            webProcessor.GoToUrl(AccountUrl);
+
+            By avatarSelector = By.XPath(@"//div[@id='global_actions']/a[contains(@class,'user_avatar')]");
+
+            webProcessor.WaitForElementToExist(avatarSelector);
+            webProcessor.Click(avatarSelector);
+        }
+
+        void GoToEditProfilePage()
+        {
+            GoToProfilePage();
+
+            By editProfileButton = By.XPath(@"//div[@class='profile_header_actions']/a[contains(@class,'btn_profile_action')][1]");
+
+            webProcessor.WaitForElementToExist(editProfileButton);
+            webProcessor.Click(editProfileButton);
         }
 
         void InputSteamGuardCode(string totpKey)
