@@ -214,15 +214,21 @@ namespace NuciWeb.Steam
             webProcessor.WaitForElementToBeVisible(subscribedNoticeSelector);
         }
 
-        void GoToEditProfilePage()
+        void GoToProfilePage()
         {
             webProcessor.GoToUrl(AccountUrl);
 
             By avatarSelector = By.XPath(@"//div[@id='global_actions']/a[contains(@class,'user_avatar')]");
-            By editProfileButton = By.XPath(@"//div[@class='profile_header_actions']/a[contains(@class,'btn_profile_action')][1]");
 
             webProcessor.WaitForElementToExist(avatarSelector);
             webProcessor.Click(avatarSelector);
+        }
+
+        void GoToEditProfilePage()
+        {
+            GoToProfilePage();
+
+            By editProfileButton = By.XPath(@"//div[@class='profile_header_actions']/a[contains(@class,'btn_profile_action')][1]");
 
             webProcessor.WaitForElementToExist(editProfileButton);
             webProcessor.Click(editProfileButton);
