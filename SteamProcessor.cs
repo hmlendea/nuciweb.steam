@@ -87,7 +87,9 @@ namespace NuciWeb.Steam
 
             GoToEditProfilePage();
 
+            webProcessor.WaitForElementToExist(profileNameSelector);
             webProcessor.SetText(profileNameSelector, profileName);
+
             webProcessor.Click(saveButtonSelector);
         }
 
