@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>NuciWeb.Steam</RootNamespace>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Description>Execute common Steam operations using NuciWeb</Description>
     <Authors>Horațiu Mlendea</Authors>
-    <Copyright>Copyright 2021 © Horațiu Mlendea</Copyright>
+    <Copyright>Copyright 2022 © Horațiu Mlendea</Copyright>
     <RepositoryUrl>https://github.com/hmlendea/nuciweb.steam</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>Web Selenium Steam</PackageTags>
