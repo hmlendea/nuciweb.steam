@@ -91,6 +91,7 @@ namespace NuciWeb.Steam
             webProcessor.SetText(profileNameSelector, profileName);
 
             webProcessor.Click(saveButtonSelector);
+            webProcessor.Wait(TimeSpan.FromSeconds(1));
         }
 
         public void AcceptCookies()
