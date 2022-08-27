@@ -40,12 +40,12 @@ namespace NuciWeb.Steam
         {
             webProcessor.GoToUrl(LoginUrl);
 
-            By usernameSelector = By.Id("input_username");
-            By passwordSelector = By.Id("input_password");
+            By usernameSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[1]/input");
+            By passwordSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[2]/input");
             By captchaInputSelector = By.Id("input_captcha");
-            By logInButtonSelector = By.XPath(@"//*[@id='login_btn_signin']/button");
-            By errorBoxSelector = By.Id("error_display");
-            By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
+            By logInButtonSelector = By.XPath(@"//button[contains(@class,'newlogindialog_SubmitButton')]");
+            By errorBoxSelector = By.XPath("//div[contains(@class,'newlogindialog_FormError')]");
+            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
             By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
 
             if (webProcessor.IsElementVisible(avatarSelector))
@@ -57,7 +57,7 @@ namespace NuciWeb.Steam
             {
                 throw new AuthenticationException("Already logged in.");
             }
-            
+
             if (webProcessor.IsElementVisible(captchaInputSelector))
             {
                 throw new AuthenticationException("Captcha input required.");
@@ -65,7 +65,7 @@ namespace NuciWeb.Steam
 
             webProcessor.SetText(usernameSelector, account.Username);
             webProcessor.SetText(passwordSelector, account.Password);
-            
+
             webProcessor.Click(logInButtonSelector);
             webProcessor.WaitForAnyElementToBeVisible(
                 steamGuardCodeInputSelector,
@@ -76,7 +76,7 @@ namespace NuciWeb.Steam
             {
                 InputSteamGuardCode(account.TotpKey);
             }
-            
+
             ValidateLogInResult();
         }
 
@@ -149,7 +149,7 @@ namespace NuciWeb.Steam
             webProcessor.WaitForAnyElementToBeVisible(errorSelector, receiptSelector);
 
             ValidateKeyActivation();
-            
+
             return webProcessor.GetText(productNameSelector);
         }
 
@@ -207,7 +207,7 @@ namespace NuciWeb.Steam
             webProcessor.WaitForAnyElementToBeVisible(
                 subscribedNoticeSelector,
                 modalDialogSelector);
-            
+
             if (webProcessor.AreAllElementsVisible(modalDialogSelector, requiredItemSelector))
             {
                 By continueButtonSelector = By.XPath("//div[@class='newmodal_buttons']/div[1]/span");
@@ -290,7 +290,7 @@ namespace NuciWeb.Steam
                 avatarSelector,
                 steamGuardIncorrectMessageSelector,
                 errorBoxSelector);
-            
+
             if (webProcessor.IsElementVisible(errorBoxSelector))
             {
                 string errorMessage = webProcessor.GetText(errorBoxSelector);
@@ -314,7 +314,7 @@ namespace NuciWeb.Steam
             {
                 return;
             }
-            
+
             string errorMessage = webProcessor.GetText(errorSelector);
 
             if (errorMessage.Contains("is not valid") ||
