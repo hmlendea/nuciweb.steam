@@ -67,15 +67,17 @@ namespace NuciWeb.Steam
             webProcessor.SetText(passwordSelector, account.Password);
 
             webProcessor.Click(logInButtonSelector);
-            webProcessor.WaitForAnyElementToBeVisible(
-                steamGuardCodeInputSelector,
-                errorBoxSelector,
-                avatarSelector);
+
+            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
 
             if (webProcessor.IsElementVisible(steamGuardCodeInputSelector))
             {
                 InputSteamGuardCode(account.TotpKey);
             }
+
+            webProcessor.WaitForAnyElementToBeVisible(
+                errorBoxSelector,
+                avatarSelector);
 
             ValidateLogInResult();
         }
@@ -111,6 +113,7 @@ namespace NuciWeb.Steam
 
             webProcessor.Click(rejectAllButtonSelector);
         }
+
         public void VisitChat()
         {
             webProcessor.GoToUrl(ChatUrl);
@@ -244,14 +247,16 @@ namespace NuciWeb.Steam
                 throw new ArgumentNullException(nameof(totpKey));
             }
 
-            By steamGuardCodeInputSelector = By.Id("twofactorcode_entry");
-            By steamGuardSubmitButtonSelector = By.XPath("//*[@id='login_twofactorauth_buttonset_entercode']/div[1]");
+            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
 
             webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
-
             string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
-            webProcessor.SetText(steamGuardCodeInputSelector, steamGuardCode);
-            webProcessor.Click(steamGuardSubmitButtonSelector);
+
+            for (int steamGuardCharIndex = 0; steamGuardCharIndex < 5; steamGuardCharIndex++)
+            {
+                By steamGuardCodeCharacterInputSelector = By.XPath($"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]/input[{steamGuardCharIndex + 1}]");
+                webProcessor.SetText(steamGuardCodeCharacterInputSelector, steamGuardCode[steamGuardCharIndex].ToString());
+            }
         }
 
         void GoToWorksopItemPage(string workshopItemId)
