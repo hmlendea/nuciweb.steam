@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>NuciWeb.Steam</RootNamespace>
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <Description>Execute common Steam operations using NuciWeb</Description>
     <Authors>Horațiu Mlendea</Authors>
     <Copyright>Copyright 2022 © Horațiu Mlendea</Copyright>

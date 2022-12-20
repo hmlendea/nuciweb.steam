@@ -189,9 +189,10 @@ namespace NuciWeb.Steam
         {
             webProcessor.GoToUrl(AccountUrl);
 
+            By addFundsLinkSelector = By.XPath(@"//a[@class='account_manage_link'][1]");
             By avatarSelector = By.XPath(@"//div[@id='global_actions']/a[contains(@class,'user_avatar')]");
 
-            webProcessor.WaitForElementToExist(avatarSelector);
+            webProcessor.WaitForElementToExist(addFundsLinkSelector);
             webProcessor.Click(avatarSelector);
         }
 
