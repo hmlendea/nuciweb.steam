@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Authentication;
+using System.Threading;
 
 using OpenQA.Selenium;
 using SteamGuard.TOTP;
@@ -23,6 +25,7 @@ namespace NuciWeb.Steam
 
         readonly IWebProcessor webProcessor;
         readonly ISteamGuard steamGuard;
+        readonly IList<string> UsedSteamGuardCodes;
 
         public SteamProcessor(IWebProcessor webProcessor)
             : this(webProcessor, new SteamGuard.TOTP.SteamGuard())
@@ -35,6 +38,7 @@ namespace NuciWeb.Steam
         {
             this.webProcessor = webProcessor;
             this.steamGuard = steamGuard;
+            this.UsedSteamGuardCodes = new List<string>();
         }
 
         public void LogIn(SteamAccount account)
@@ -212,6 +216,17 @@ namespace NuciWeb.Steam
 
             webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
             string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
+
+            // Wait for the next SG code if this one was already used as they are single-use
+            while (
+                string.IsNullOrWhiteSpace(steamGuardCode) ||
+                UsedSteamGuardCodes.Contains(steamGuardCode))
+            {
+                steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
+                Thread.Sleep(10000); // TODO: Remove this!
+            }
+
+            UsedSteamGuardCodes.Add(steamGuardCode);
 
             for (int steamGuardCharIndex = 0; steamGuardCharIndex < 5; steamGuardCharIndex++)
             {
