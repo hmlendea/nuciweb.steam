@@ -16,7 +16,8 @@ namespace NuciWeb.Steam
         public static string AccountUrl => $"{StoreUrl}/account";
         public static string ChatUrl => $"{CommunityUrl}/chat";
         public static string CookiePreferencesUrl => $"{AccountUrl}/cookiepreferences";
-        public static string LoginUrl => $"{StoreUrl}/login/?redir=&redir_ssl=1";
+        public static string StoreLoginUrl => $"{StoreUrl}/login";
+        public static string CommunityLoginUrl => $"{CommunityUrl}/login/home";
         public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
         public static string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
 
@@ -38,48 +39,8 @@ namespace NuciWeb.Steam
 
         public void LogIn(SteamAccount account)
         {
-            webProcessor.GoToUrl(LoginUrl);
-
-            By usernameSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[1]/input");
-            By passwordSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[2]/input");
-            By captchaInputSelector = By.Id("input_captcha");
-            By logInButtonSelector = By.XPath(@"//button[contains(@class,'newlogindialog_SubmitButton')]");
-            By errorBoxSelector = By.XPath("//div[contains(@class,'newlogindialog_FormError')]");
-            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
-            By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
-
-            if (webProcessor.IsElementVisible(avatarSelector))
-            {
-                ValidateCurrentSession(account.Username);
-            }
-
-            if (webProcessor.IsElementVisible(avatarSelector))
-            {
-                throw new AuthenticationException("Already logged in.");
-            }
-
-            if (webProcessor.IsElementVisible(captchaInputSelector))
-            {
-                throw new AuthenticationException("Captcha input required.");
-            }
-
-            webProcessor.SetText(usernameSelector, account.Username);
-            webProcessor.SetText(passwordSelector, account.Password);
-
-            webProcessor.Click(logInButtonSelector);
-
-            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
-
-            if (webProcessor.IsElementVisible(steamGuardCodeInputSelector))
-            {
-                InputSteamGuardCode(account.TotpKey);
-            }
-
-            webProcessor.WaitForAnyElementToBeVisible(
-                errorBoxSelector,
-                avatarSelector);
-
-            ValidateLogInResult();
+            LogInOnPage(account, StoreLoginUrl);
+            LogInOnPage(account, CommunityLoginUrl);
         }
 
         public void SetProfileName(string profileName)
@@ -267,6 +228,49 @@ namespace NuciWeb.Steam
 
             webProcessor.GoToUrl(workshopItemUrl);
             webProcessor.WaitForElementToBeVisible(mainContentSelector);
+        }
+
+        private void LogInOnPage(SteamAccount account, string url)
+        {
+            webProcessor.GoToUrl(url);
+
+            By usernameSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[1]/input");
+            By passwordSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[2]/input");
+            By captchaInputSelector = By.Id("input_captcha");
+            By logInButtonSelector = By.XPath(@"//button[contains(@class,'newlogindialog_SubmitButton')]");
+            By errorBoxSelector = By.XPath("//div[contains(@class,'newlogindialog_FormError')]");
+            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
+            By editProfileButtonSelector = By.XPath(@"//div[contains(@class,'profile_header_actions')]");
+            By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
+            By accountPulldownSelector = By.Id("account_pulldown");
+
+            webProcessor.WaitForAnyElementToBeVisible(usernameSelector, editProfileButtonSelector);
+
+            if (webProcessor.AreAllElementsVisible(avatarSelector, accountPulldownSelector))
+            {
+                Console.WriteLine("Validating..." + url);
+                ValidateCurrentSession(account.Username);
+                return;
+            }
+
+            if (webProcessor.IsElementVisible(captchaInputSelector))
+            {
+                throw new AuthenticationException("Captcha input required.");
+            }
+
+            webProcessor.SetText(usernameSelector, account.Username);
+            webProcessor.SetText(passwordSelector, account.Password);
+
+            webProcessor.Click(logInButtonSelector);
+
+            webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
+
+            if (webProcessor.IsElementVisible(steamGuardCodeInputSelector))
+            {
+                InputSteamGuardCode(account.TotpKey);
+            }
+
+            ValidateLogInResult();
         }
 
         void ValidateCurrentSession(string expectedUsername)
