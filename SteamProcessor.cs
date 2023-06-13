@@ -213,7 +213,7 @@ namespace NuciWeb.Steam
                 throw new ArgumentNullException(nameof(totpKey));
             }
 
-            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
+            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]");
 
             webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
             string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
@@ -231,7 +231,7 @@ namespace NuciWeb.Steam
 
             for (int steamGuardCharIndex = 0; steamGuardCharIndex < 5; steamGuardCharIndex++)
             {
-                By steamGuardCodeCharacterInputSelector = By.XPath($"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]/input[{steamGuardCharIndex + 1}]");
+                By steamGuardCodeCharacterInputSelector = By.XPath($"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]/input[{steamGuardCharIndex + 1}]");
                 webProcessor.SetText(steamGuardCodeCharacterInputSelector, steamGuardCode[steamGuardCharIndex].ToString());
             }
         }
@@ -255,7 +255,7 @@ namespace NuciWeb.Steam
             By captchaInputSelector = By.Id("input_captcha");
             By logInButtonSelector = By.XPath(@"//button[contains(@class,'newlogindialog_SubmitButton')]");
             By errorBoxSelector = By.XPath("//div[contains(@class,'newlogindialog_FormError')]");
-            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'newlogindialog_SegmentedCharacterInput')]");
+            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]");
             By editProfileButtonSelector = By.XPath(@"//div[contains(@class,'profile_header_actions')]");
             By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
             By accountPulldownSelector = By.Id("account_pulldown");
