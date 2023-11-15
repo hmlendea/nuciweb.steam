@@ -27,7 +27,7 @@ namespace NuciWeb.Steam
         public void LogIn(SteamAccount account)
             => authenticationProcessor.LogIn(account);
 
-        public void SetName(string profileName)
+        public void SetProfileName(string profileName)
             => profileProcessor.SetName(profileName);
 
         public void AcceptCookies()

@@ -6,7 +6,7 @@ namespace NuciWeb.Steam
     {
         void LogIn(SteamAccount account);
 
-        void SetName(string profileName);
+        void SetProfileName(string profileName);
 
         void AcceptCookies();
 
