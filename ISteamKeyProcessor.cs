@@ -1,6 +1,6 @@
 namespace NuciWeb.Steam
 {
-    internal interface ISteamKeyManager
+    internal interface ISteamKeyProcessor
     {
         string ActivateKey(string key);
     }

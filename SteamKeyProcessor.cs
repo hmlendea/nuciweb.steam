@@ -2,11 +2,11 @@ using OpenQA.Selenium;
 
 namespace NuciWeb.Steam
 {
-    public sealed class SteamKeyManager : ISteamKeyManager
+    public sealed class SteamKeyProcessor : ISteamKeyProcessor
     {
         readonly IWebProcessor webProcessor;
 
-        public SteamKeyManager(IWebProcessor webProcessor)
+        public SteamKeyProcessor(IWebProcessor webProcessor)
         {
             this.webProcessor = webProcessor;
         }

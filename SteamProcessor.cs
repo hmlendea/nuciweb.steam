@@ -9,19 +9,19 @@ namespace NuciWeb.Steam
     public sealed class SteamProcessor : ISteamProcessor
     {
         readonly IWebProcessor webProcessor;
-        readonly ISteamAuthenticator steamAuthenticator;
-        readonly ISteamKeyManager steamKeyManager;
+        readonly ISteamAuthenticationProcessor authenticationProcessor;
+        readonly ISteamKeyProcessor keyProcessor;
 
         public SteamProcessor(IWebProcessor webProcessor)
         {
             this.webProcessor = webProcessor;
 
-            steamAuthenticator = new SteamAuthenticator(webProcessor);
-            steamKeyManager = new SteamKeyManager(webProcessor);
+            authenticationProcessor = new SteamAuthenticationProcessor(webProcessor);
+            keyProcessor = new SteamKeyProcessor(webProcessor);
         }
 
         public void LogIn(SteamAccount account)
-            => steamAuthenticator.LogIn(account);
+            => authenticationProcessor.LogIn(account);
 
         public void SetProfileName(string profileName)
         {
@@ -70,7 +70,7 @@ namespace NuciWeb.Steam
         /// <returns>The name of the activated product.</returns>
         /// <param name="key">The product key.</param>
         public string ActivateKey(string key)
-            => steamKeyManager.ActivateKey(key);
+            => keyProcessor.ActivateKey(key);
 
         public void FavouriteWorkshopItem(string workshopItemId)
         {

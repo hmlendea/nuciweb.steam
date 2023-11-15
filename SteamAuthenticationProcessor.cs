@@ -10,18 +10,18 @@ using NuciWeb.Steam.Models;
 
 namespace NuciWeb.Steam
 {
-    internal sealed class SteamAuthenticator : ISteamAuthenticator
+    internal sealed class SteamAuthenticationProcessor : ISteamAuthenticationProcessor
     {
         readonly IWebProcessor webProcessor;
         readonly ISteamGuard steamGuard;
         readonly IList<string> UsedSteamGuardCodes;
 
-        public SteamAuthenticator(IWebProcessor webProcessor)
+        public SteamAuthenticationProcessor(IWebProcessor webProcessor)
             : this(webProcessor, new SteamGuard.TOTP.SteamGuard())
         {
         }
 
-        public SteamAuthenticator(
+        public SteamAuthenticationProcessor(
             IWebProcessor webProcessor,
             ISteamGuard steamGuard)
         {
