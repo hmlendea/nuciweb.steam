@@ -6,7 +6,7 @@ namespace NuciWeb.Steam
     {
         readonly IWebProcessor webProcessor;
 
-        internal SteamWorkshopProcessor(IWebProcessor webProcessor)
+        public SteamWorkshopProcessor(IWebProcessor webProcessor)
         {
             this.webProcessor = webProcessor;
         }
