@@ -41,29 +41,49 @@ namespace NuciWeb.Steam
         {
             By profilePictureTabSelector = By.XPath(@"//div[contains(@class,'profileeditshell_Navigation')]/a[contains(@href,'/edit/avatar')]");
             By profilePictureInputSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarDialogUploadArea')]/input");
-            By profilePictureImageSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarRow')]/div[1]/div[1]/img");
+            By profilePictureNewImageSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarRow')]/div[1]/div[1]/img");
+            By profilePictureCurrentImageSelector = By.XPath(@"//div[contains(@class,'profile_small_header_avatar')]/div[contains(@class,'avatar_Avatar')]/div/div/img");
             By saveButtonSelector = By.XPath(profileSaveButtonXpath);
 
             GoToEditProfilePage();
 
             webProcessor.Click(profilePictureTabSelector);
 
-            string originalProfilePictureUrl = webProcessor.GetSource(profilePictureImageSelector);
+            string newProfilePictureOriginalUrl = webProcessor.GetSource(profilePictureNewImageSelector);
+            string currentProfilePictureOriginalUrl = webProcessor.GetSource(profilePictureCurrentImageSelector);
 
             webProcessor.ExecuteScript("document.evaluate(\"" + profilePictureInputSelector.Criteria +  "\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.style = \"display: block;\";");
             webProcessor.AppendText(profilePictureInputSelector, imagePath);
 
             for (int i = 0; i < 5; i++)
             {
-                string profilePictureUrl = webProcessor.GetSource(profilePictureImageSelector);
+                string newProfilePictureUrl = webProcessor.GetSource(profilePictureNewImageSelector);
 
-                if (profilePictureUrl.Equals(originalProfilePictureUrl))
+                if (newProfilePictureUrl.Equals(newProfilePictureOriginalUrl))
                 {
                     webProcessor.Wait();
+                }
+                else
+                {
+                    break;
                 }
             }
 
             webProcessor.Click(saveButtonSelector);
+
+            for (int i = 0; i < 5; i++)
+            {
+                string currentProfilePictureUrl = webProcessor.GetSource(profilePictureCurrentImageSelector);
+
+                if (currentProfilePictureUrl.Equals(currentProfilePictureOriginalUrl))
+                {
+                    webProcessor.Wait();
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         void GoToProfilePage()
