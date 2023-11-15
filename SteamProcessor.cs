@@ -8,6 +8,7 @@ namespace NuciWeb.Steam
     {
         readonly IWebProcessor webProcessor;
         readonly ISteamAuthenticationProcessor authenticationProcessor;
+        readonly ISteamChatProcessor chatProcessor;
         readonly ISteamKeyProcessor keyProcessor;
         readonly ISteamProfileProcessor profileProcessor;
         readonly ISteamWorkshopProcessor workshopProcessor;
@@ -17,6 +18,7 @@ namespace NuciWeb.Steam
             this.webProcessor = webProcessor;
 
             authenticationProcessor = new SteamAuthenticationProcessor(webProcessor);
+            chatProcessor = new SteamChatProcessor(webProcessor);
             keyProcessor = new SteamKeyProcessor(webProcessor);
             profileProcessor = new SteamProfileProcessor(webProcessor);
             workshopProcessor = new SteamWorkshopProcessor(webProcessor);
@@ -47,13 +49,7 @@ namespace NuciWeb.Steam
         }
 
         public void VisitChat()
-        {
-            webProcessor.GoToUrl(SteamUrls.Chat);
-
-            By avatarSelector = By.ClassName("currentUserAvatar");
-
-            webProcessor.WaitForElementToExist(avatarSelector);
-        }
+            => chatProcessor.Visit();
 
         /// <summary>
         /// Activates the given key on the current account.
