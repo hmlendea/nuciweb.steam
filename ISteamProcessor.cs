@@ -6,7 +6,9 @@ namespace NuciWeb.Steam
     {
         void LogIn(SteamAccount account);
 
-        void SetProfileName(string profileName);
+        void SetProfileName(string name);
+
+        void SetProfileIdentifier(string identifier);
 
         void SetProfilePicture(string imagePath);
 

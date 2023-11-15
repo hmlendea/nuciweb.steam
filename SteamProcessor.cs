@@ -27,11 +27,11 @@ namespace NuciWeb.Steam
         public void LogIn(SteamAccount account)
             => authenticationProcessor.LogIn(account);
 
-        public void SetProfileName(string profileName)
-            => profileProcessor.SetName(profileName);
+        public void SetProfileName(string name)
+            => profileProcessor.SetName(name);
 
-        public void SetProfileIdentifier(string profileName)
-            => profileProcessor.SetProfilePicture(profileName);
+        public void SetProfileIdentifier(string identifier)
+            => profileProcessor.SetIdentifier(identifier);
 
         public void SetProfilePicture(string imagePath)
             => profileProcessor.SetProfilePicture(imagePath);
