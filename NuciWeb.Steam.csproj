@@ -6,15 +6,15 @@
     <Version>1.4.1</Version>
     <Description>Execute common Steam operations using NuciWeb</Description>
     <Authors>Horațiu Mlendea</Authors>
-    <Copyright>Copyright 2022 © Horațiu Mlendea</Copyright>
+    <Copyright>Copyright 2023 © Horațiu Mlendea</Copyright>
     <RepositoryUrl>https://github.com/hmlendea/nuciweb.steam</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>Web Selenium Steam</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuciExtensions" Version="1.5.0" />
-    <PackageReference Include="NuciWeb" Version="2.1.1" />
+    <PackageReference Include="NuciExtensions" Version="3.0.0" />
+    <PackageReference Include="NuciWeb" Version="2.2.1" />
     <PackageReference Include="SteamGuard.TOTP" Version="1.0.0" />
   </ItemGroup>
 
