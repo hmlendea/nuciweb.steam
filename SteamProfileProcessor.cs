@@ -6,6 +6,8 @@ namespace NuciWeb.Steam
 {
     internal sealed class SteamProfileProcessor : ISteamProfileProcessor
     {
+        const string profileSaveButtonXpath = @"//div[contains(@class,'profileedit_SaveCancelButtons')]/button[@type='submit'][1]";
+
         readonly IWebProcessor webProcessor;
 
         public SteamProfileProcessor(IWebProcessor webProcessor)
@@ -16,24 +18,31 @@ namespace NuciWeb.Steam
         public void SetName(string profileName)
         {
             By profileNameSelector = By.Name("personaName");
-            By saveButtonSelector = By.XPath(@"//div[contains(@class,'profileedit_SaveCancelButtons')]/button[@type='submit'][1]");
+            By saveButtonSelector = By.XPath(profileSaveButtonXpath);
 
             GoToEditProfilePage();
 
-            webProcessor.WaitForElementToExist(profileNameSelector);
             webProcessor.SetText(profileNameSelector, profileName);
-
             webProcessor.Click(saveButtonSelector);
-            webProcessor.Wait(TimeSpan.FromSeconds(1));
+        }
+
+        public void SetIdentifier(string identifier)
+        {
+            By identifierSelector = By.Name("customURL");
+            By saveButtonSelector = By.XPath(profileSaveButtonXpath);
+
+            GoToEditProfilePage();
+
+            webProcessor.SetText(identifierSelector, identifier);
+            webProcessor.Click(saveButtonSelector);
         }
 
         public void SetProfilePicture(string imagePath)
         {
             By profilePictureTabSelector = By.XPath(@"//div[contains(@class,'profileeditshell_Navigation')]/a[contains(@href,'/edit/avatar')]");
             By profilePictureInputSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarDialogUploadArea')]/input");
-            By profilePictureUploadButtonSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarDialogUploadArea')]/button");
             By profilePictureImageSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarRow')]/div[1]/div[1]/img");
-            By saveButtonSelector = By.XPath(@"//div[contains(@class,'profileedit_SaveCancelButtons')]/button[contains(@class,'Primary')]");
+            By saveButtonSelector = By.XPath(profileSaveButtonXpath);
 
             GoToEditProfilePage();
 

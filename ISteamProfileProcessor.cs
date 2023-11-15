@@ -4,6 +4,8 @@ namespace NuciWeb.Steam
     {
         void SetName(string name);
 
+        void SetIdentifier(string identifier);
+
         void SetProfilePicture(string imagePath);
     }
 }
