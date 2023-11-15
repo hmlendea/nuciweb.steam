@@ -8,6 +8,8 @@ namespace NuciWeb.Steam
 
         void SetProfileName(string profileName);
 
+        void SetProfilePicture(string imagePath);
+
         void AcceptCookies();
 
         void RejectCookies();

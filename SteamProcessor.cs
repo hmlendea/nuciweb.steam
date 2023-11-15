@@ -30,6 +30,9 @@ namespace NuciWeb.Steam
         public void SetProfileName(string profileName)
             => profileProcessor.SetName(profileName);
 
+        public void SetProfilePicture(string imagePath)
+            => profileProcessor.SetProfilePicture(imagePath);
+
         public void AcceptCookies()
         {
             webProcessor.GoToUrl(SteamUrls.CookiePreferences);
