@@ -12,17 +12,6 @@ namespace NuciWeb.Steam
 {
     public sealed class SteamProcessor : ISteamProcessor
     {
-        public static string StoreUrl => "https://store.steampowered.com";
-        public static string CommunityUrl => "https://steamcommunity.com";
-
-        public static string AccountUrl => $"{StoreUrl}/account";
-        public static string ChatUrl => $"{CommunityUrl}/chat";
-        public static string CookiePreferencesUrl => $"{AccountUrl}/cookiepreferences";
-        public static string StoreLoginUrl => $"{StoreUrl}/login";
-        public static string CommunityLoginUrl => $"{CommunityUrl}/login/home";
-        public static string KeyActivationUrl = $"{StoreUrl}/account/registerkey";
-        public static string WorkshopItemUrlFormat => $"{CommunityUrl}/sharedfiles/filedetails/?id={{0}}";
-
         readonly IWebProcessor webProcessor;
         readonly ISteamGuard steamGuard;
         readonly IList<string> UsedSteamGuardCodes;
@@ -43,8 +32,8 @@ namespace NuciWeb.Steam
 
         public void LogIn(SteamAccount account)
         {
-            LogInOnPage(account, StoreLoginUrl);
-            LogInOnPage(account, CommunityLoginUrl);
+            LogInOnPage(account, SteamUrls.StoreLogin);
+            LogInOnPage(account, SteamUrls.CommunityLogin);
         }
 
         public void SetProfileName(string profileName)
@@ -63,7 +52,7 @@ namespace NuciWeb.Steam
 
         public void AcceptCookies()
         {
-            webProcessor.GoToUrl(CookiePreferencesUrl);
+            webProcessor.GoToUrl(SteamUrls.CookiePreferences);
 
             By acceptAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[2]");
 
@@ -72,7 +61,7 @@ namespace NuciWeb.Steam
 
         public void RejectCookies()
         {
-            webProcessor.GoToUrl(CookiePreferencesUrl);
+            webProcessor.GoToUrl(SteamUrls.CookiePreferences);
 
             By rejectAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[1]");
 
@@ -81,7 +70,7 @@ namespace NuciWeb.Steam
 
         public void VisitChat()
         {
-            webProcessor.GoToUrl(ChatUrl);
+            webProcessor.GoToUrl(SteamUrls.Chat);
 
             By avatarSelector = By.ClassName("currentUserAvatar");
 
@@ -106,7 +95,7 @@ namespace NuciWeb.Steam
 
             if (!webProcessor.IsElementVisible(keyInputSelector))
             {
-                webProcessor.GoToUrl(KeyActivationUrl);
+                webProcessor.GoToUrl(SteamUrls.KeyActivation);
             }
 
             webProcessor.SetText(keyInputSelector, key);
@@ -187,7 +176,7 @@ namespace NuciWeb.Steam
 
         void GoToProfilePage()
         {
-            webProcessor.GoToUrl(AccountUrl);
+            webProcessor.GoToUrl(SteamUrls.Account);
 
             By addFundsLinkSelector = By.XPath(@"//a[@class='account_manage_link'][1]");
             By avatarSelector = By.XPath(@"//div[@id='global_actions']/a[contains(@class,'user_avatar')]");
@@ -238,7 +227,7 @@ namespace NuciWeb.Steam
 
         void GoToWorksopItemPage(string workshopItemId)
         {
-            string workshopItemUrl = string.Format(WorkshopItemUrlFormat, workshopItemId);
+            string workshopItemUrl = string.Format(SteamUrls.WorkshopItemFormat, workshopItemId);
 
             By mainContentSelector = By.Id("mainContents");
 
