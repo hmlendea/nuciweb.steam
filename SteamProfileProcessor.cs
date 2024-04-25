@@ -6,7 +6,7 @@ namespace NuciWeb.Steam
 {
     internal sealed class SteamProfileProcessor : ISteamProfileProcessor
     {
-        const string profileSaveButtonXpath = @"//form[contains(@action,'/edit/info')]/div[last()]/button[@type='submit']";
+        const string profileSaveButtonXpath = @"//button[contains(@class,'Primary')]";
 
         readonly IWebProcessor webProcessor;
 
@@ -39,10 +39,10 @@ namespace NuciWeb.Steam
 
         public void SetProfilePicture(string imagePath)
         {
-            By profilePictureTabSelector = By.XPath(@"//div[contains(@class,'profileeditshell_Navigation')]/a[contains(@href,'/edit/avatar')]");
-            By profilePictureInputSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarDialogUploadArea')]/input");
-            By profilePictureNewImageSelector = By.XPath(@"//div[contains(@class,'avatar_AvatarRow')]/div[1]/div[1]/img");
-            By profilePictureCurrentImageSelector = By.XPath(@"//div[contains(@class,'profile_small_header_avatar')]/div[contains(@class,'avatar_Avatar')]/div/div/img");
+            By profilePictureTabSelector = By.XPath(@"//a[contains(@href,'/edit/avatar')]");
+            By profilePictureInputSelector = By.XPath(@"//input[@type='file']");
+            By profilePictureNewImageSelector = By.XPath(@"//div[contains(@class,'DialogBody')]/div/div[3]/div[1]/div[1]/div/img[contains(@src,'avatar')]");
+            By profilePictureCurrentImageSelector = By.XPath(@"//div[contains(@class,'profile_small_header_avatar')]/div/div/div/img[contains(@src,'akamai')]");
             By saveButtonSelector = By.XPath(profileSaveButtonXpath);
 
             GoToEditProfilePage();
