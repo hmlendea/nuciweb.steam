@@ -6,7 +6,7 @@ namespace NuciWeb.Steam
 {
     internal sealed class SteamProfileProcessor : ISteamProfileProcessor
     {
-        const string profileSaveButtonXpath = @"//div[contains(@class,'profileedit_SaveCancelButtons')]/button[contains(@class,'Primary')]";
+        const string profileSaveButtonXpath = @"//form[contains(@action,'/edit/info')]/div[last()]/button[@type='submit']";
 
         readonly IWebProcessor webProcessor;
 
