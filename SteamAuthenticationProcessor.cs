@@ -16,6 +16,8 @@ namespace NuciWeb.Steam
         readonly ISteamGuard steamGuard;
         readonly IList<string> UsedSteamGuardCodes;
 
+        static string SteamGuardCodeInputXPath => @"//form/div/div/div/div/input/..";
+
         public SteamAuthenticationProcessor(IWebProcessor webProcessor)
             : this(webProcessor, new SteamGuard.TOTP.SteamGuard())
         {
@@ -43,7 +45,7 @@ namespace NuciWeb.Steam
                 throw new ArgumentNullException(nameof(totpKey));
             }
 
-            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]");
+            By steamGuardCodeInputSelector = By.XPath(SteamGuardCodeInputXPath);
 
             webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
             string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
@@ -61,7 +63,7 @@ namespace NuciWeb.Steam
 
             for (int steamGuardCharIndex = 0; steamGuardCharIndex < 5; steamGuardCharIndex++)
             {
-                By steamGuardCodeCharacterInputSelector = By.XPath($"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]/input[{steamGuardCharIndex + 1}]");
+                By steamGuardCodeCharacterInputSelector = By.XPath($"{SteamGuardCodeInputXPath}/input[{steamGuardCharIndex + 1}]");
                 webProcessor.SetText(steamGuardCodeCharacterInputSelector, steamGuardCode[steamGuardCharIndex].ToString());
             }
         }
@@ -69,21 +71,20 @@ namespace NuciWeb.Steam
         private void LogInOnPage(SteamAccount account, string url)
         {
             webProcessor.GoToUrl(url);
+            webProcessor.Wait(TimeSpan.FromSeconds(2));
 
-            By usernameSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[1]/input");
-            By passwordSelector = By.XPath(@"//form[contains(@class,'newlogindialog_LoginForm')]/div[2]/input");
+            By usernameSelector = By.XPath(@"//form/div[1]/input");
+            By passwordSelector = By.XPath(@"//form/div[2]/input");
             By captchaInputSelector = By.Id("input_captcha");
-            By logInButtonSelector = By.XPath(@"//button[contains(@class,'newlogindialog_SubmitButton')]");
-            By steamGuardCodeInputSelector = By.XPath(@"//div[contains(@class,'segmentedinputs_SegmentedCharacterInput')]");
-            By editProfileButtonSelector = By.XPath(@"//div[contains(@class,'profile_header_actions')]");
+            By logInButtonSelector = By.XPath(@"//button[@type='submit']");
+            By steamGuardCodeInputSelector = By.XPath(SteamGuardCodeInputXPath);
             By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
             By accountPulldownSelector = By.Id("account_pulldown");
 
-            webProcessor.WaitForAnyElementToBeVisible(usernameSelector, editProfileButtonSelector);
+            webProcessor.WaitForAnyElementToBeVisible(usernameSelector, avatarSelector);
 
             if (webProcessor.AreAllElementsVisible(avatarSelector, accountPulldownSelector))
             {
-                Console.WriteLine("Validating..." + url);
                 ValidateCurrentSession(account.Username);
                 return;
             }
@@ -111,7 +112,7 @@ namespace NuciWeb.Steam
         void ValidateCurrentSession(string expectedUsername)
         {
             By accountPulldownSelector = By.Id("account_pulldown");
-            By onlinePersonaSelector = By.XPath("//span[contains(@class,'online')]");
+            By onlinePersonaSelector = By.XPath("//span[contains(@class,'persona_name_text_content')]");
 
             webProcessor.Click(accountPulldownSelector);
             webProcessor.WaitForAnyElementToBeVisible(onlinePersonaSelector);
