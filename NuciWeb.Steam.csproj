@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>NuciWeb.Steam</RootNamespace>
-    <Version>1.4.2</Version>
+    <Version>1.4.3</Version>
     <Description>Execute common Steam operations using NuciWeb</Description>
     <Authors>Horațiu Mlendea</Authors>
-    <Copyright>Copyright 2023 © Horațiu Mlendea</Copyright>
+    <Copyright>Copyright 2024 © Horațiu Mlendea</Copyright>
     <RepositoryUrl>https://github.com/hmlendea/nuciweb.steam</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>Web Selenium Steam</PackageTags>
