@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>NuciWeb.Steam</RootNamespace>
     <Version>1.4.3</Version>
     <Description>Execute common Steam operations using NuciWeb</Description>
@@ -14,9 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuciExtensions" Version="4.0.0" />
-    <PackageReference Include="NuciWeb" Version="2.2.4" />
-    <PackageReference Include="SteamGuard.TOTP" Version="1.0.0" />
+    <PackageReference Include="NuciExtensions" Version="5.0.0" />
+    <PackageReference Include="NuciWeb" Version="3.0.0" />
+    <PackageReference Include="SteamGuard.TOTP" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
