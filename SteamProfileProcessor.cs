@@ -1,40 +1,27 @@
-using System;
-
 using OpenQA.Selenium;
 
 namespace NuciWeb.Steam
 {
-    internal sealed class SteamProfileProcessor : ISteamProfileProcessor
+    internal sealed class SteamProfileProcessor(IWebProcessor webProcessor) : ISteamProfileProcessor
     {
         const string profileSaveButtonXpath = @"//button[contains(@class,'Primary')]";
 
-        readonly IWebProcessor webProcessor;
-
-        public SteamProfileProcessor(IWebProcessor webProcessor)
-        {
-            this.webProcessor = webProcessor;
-        }
+        readonly IWebProcessor webProcessor = webProcessor;
 
         public void SetName(string profileName)
         {
-            By profileNameSelector = By.Name("personaName");
-            By saveButtonSelector = By.XPath(profileSaveButtonXpath);
-
             GoToEditProfilePage();
 
-            webProcessor.SetText(profileNameSelector, profileName);
-            webProcessor.Click(saveButtonSelector);
+            webProcessor.SetText(By.Name("personaName"), profileName);
+            webProcessor.Click(By.XPath(profileSaveButtonXpath));
         }
 
         public void SetIdentifier(string identifier)
         {
-            By identifierSelector = By.Name("customURL");
-            By saveButtonSelector = By.XPath(profileSaveButtonXpath);
-
             GoToEditProfilePage();
 
-            webProcessor.SetText(identifierSelector, identifier);
-            webProcessor.Click(saveButtonSelector);
+            webProcessor.SetText(By.Name("customURL"), identifier);
+            webProcessor.Click(By.XPath(profileSaveButtonXpath));
         }
 
         public void SetProfilePicture(string imagePath)

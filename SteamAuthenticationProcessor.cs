@@ -10,27 +10,18 @@ using NuciWeb.Steam.Models;
 
 namespace NuciWeb.Steam
 {
-    internal sealed class SteamAuthenticationProcessor : ISteamAuthenticationProcessor
+    internal sealed class SteamAuthenticationProcessor(
+        IWebProcessor webProcessor,
+        ISteamGuard steamGuard) : ISteamAuthenticationProcessor
     {
-        readonly IWebProcessor webProcessor;
-        readonly ISteamGuard steamGuard;
-        readonly IList<string> UsedSteamGuardCodes;
+        readonly IWebProcessor webProcessor = webProcessor;
+        readonly ISteamGuard steamGuard = steamGuard;
+        readonly IList<string> UsedSteamGuardCodes = [];
 
         static string SteamGuardCodeInputXPath => @"//form/div/div/div/div/input/..";
 
         public SteamAuthenticationProcessor(IWebProcessor webProcessor)
-            : this(webProcessor, new SteamGuard.TOTP.SteamGuard())
-        {
-        }
-
-        public SteamAuthenticationProcessor(
-            IWebProcessor webProcessor,
-            ISteamGuard steamGuard)
-        {
-            this.webProcessor = webProcessor;
-            this.steamGuard = steamGuard;
-            this.UsedSteamGuardCodes = new List<string>();
-        }
+            : this(webProcessor, new SteamGuard.TOTP.SteamGuard()) { }
 
         public void LogIn(SteamAccount account)
         {
@@ -138,8 +129,7 @@ namespace NuciWeb.Steam
 
             if (webProcessor.IsElementVisible(errorBoxSelector))
             {
-                string errorMessage = webProcessor.GetText(errorBoxSelector);
-                throw new AuthenticationException(errorMessage);
+                throw new AuthenticationException(webProcessor.GetText(errorBoxSelector));
             }
             else if (webProcessor.IsElementVisible(steamGuardIncorrectMessageSelector))
             {

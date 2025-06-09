@@ -2,14 +2,9 @@ using OpenQA.Selenium;
 
 namespace NuciWeb.Steam
 {
-    internal sealed class SteamWorkshopProcessor : ISteamWorkshopProcessor
+    internal sealed class SteamWorkshopProcessor(IWebProcessor webProcessor) : ISteamWorkshopProcessor
     {
-        readonly IWebProcessor webProcessor;
-
-        public SteamWorkshopProcessor(IWebProcessor webProcessor)
-        {
-            this.webProcessor = webProcessor;
-        }
+        readonly IWebProcessor webProcessor = webProcessor;
 
         public void AddToFavourite(string workshopItemId)
         {

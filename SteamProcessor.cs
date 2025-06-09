@@ -4,25 +4,14 @@ using NuciWeb.Steam.Models;
 
 namespace NuciWeb.Steam
 {
-    public sealed class SteamProcessor : ISteamProcessor
+    public sealed class SteamProcessor(IWebProcessor webProcessor) : ISteamProcessor
     {
-        readonly IWebProcessor webProcessor;
-        readonly ISteamAuthenticationProcessor authenticationProcessor;
-        readonly ISteamChatProcessor chatProcessor;
-        readonly ISteamKeyProcessor keyProcessor;
-        readonly ISteamProfileProcessor profileProcessor;
-        readonly ISteamWorkshopProcessor workshopProcessor;
-
-        public SteamProcessor(IWebProcessor webProcessor)
-        {
-            this.webProcessor = webProcessor;
-
-            authenticationProcessor = new SteamAuthenticationProcessor(webProcessor);
-            chatProcessor = new SteamChatProcessor(webProcessor);
-            keyProcessor = new SteamKeyProcessor(webProcessor);
-            profileProcessor = new SteamProfileProcessor(webProcessor);
-            workshopProcessor = new SteamWorkshopProcessor(webProcessor);
-        }
+        readonly IWebProcessor webProcessor = webProcessor;
+        readonly SteamAuthenticationProcessor authenticationProcessor = new(webProcessor);
+        readonly SteamChatProcessor chatProcessor = new(webProcessor);
+        readonly SteamKeyProcessor keyProcessor = new(webProcessor);
+        readonly SteamProfileProcessor profileProcessor = new(webProcessor);
+        readonly SteamWorkshopProcessor workshopProcessor = new(webProcessor);
 
         public void LogIn(SteamAccount account)
             => authenticationProcessor.LogIn(account);
@@ -39,19 +28,13 @@ namespace NuciWeb.Steam
         public void AcceptCookies()
         {
             webProcessor.GoToUrl(SteamUrls.CookiePreferences);
-
-            By acceptAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[2]");
-
-            webProcessor.Click(acceptAllButtonSelector);
+            webProcessor.Click(By.XPath("//div[@class='account_settings_container']/div/div[2]"));
         }
 
         public void RejectCookies()
         {
             webProcessor.GoToUrl(SteamUrls.CookiePreferences);
-
-            By rejectAllButtonSelector = By.XPath("//div[@class='account_settings_container']/div/div[1]");
-
-            webProcessor.Click(rejectAllButtonSelector);
+            webProcessor.Click(By.XPath("//div[@class='account_settings_container']/div/div[1]"));
         }
 
         public void VisitChat()
