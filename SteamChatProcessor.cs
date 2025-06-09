@@ -2,22 +2,14 @@ using OpenQA.Selenium;
 
 namespace NuciWeb.Steam
 {
-    internal sealed class SteamChatProcessor : ISteamChatProcessor
+    internal sealed class SteamChatProcessor(IWebProcessor webProcessor) : ISteamChatProcessor
     {
-        readonly IWebProcessor webProcessor;
-
-        public SteamChatProcessor(IWebProcessor webProcessor)
-        {
-            this.webProcessor = webProcessor;
-        }
+        readonly IWebProcessor webProcessor = webProcessor;
 
         public void Visit()
         {
             webProcessor.GoToUrl(SteamUrls.Chat);
-
-            By avatarSelector = By.ClassName("currentUserAvatar");
-
-            webProcessor.WaitForElementToExist(avatarSelector);
+            webProcessor.WaitForElementToExist(By.ClassName("currentUserAvatar"));
         }
     }
 }
