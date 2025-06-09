@@ -14,9 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuciExtensions" Version="4.0.0" />
-    <PackageReference Include="NuciWeb" Version="2.2.4" />
-    <PackageReference Include="SteamGuard.TOTP" Version="1.0.0" />
+    <PackageReference Include="NuciExtensions" Version="5.0.0" />
+    <PackageReference Include="NuciWeb" Version="3.0.0" />
+    <PackageReference Include="SteamGuard.TOTP" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
