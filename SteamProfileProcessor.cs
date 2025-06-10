@@ -29,7 +29,7 @@ namespace NuciWeb.Steam
             By profilePictureTabSelector = By.XPath(@"//a[contains(@href,'/edit/avatar')]");
             By profilePictureInputSelector = By.XPath(@"//input[@type='file']");
             By profilePictureNewImageSelector = By.XPath(@"//div[contains(@class,'DialogBody')]/div/div[3]/div[1]/div[1]/div/img[contains(@src,'avatar')]");
-            By profilePictureCurrentImageSelector = By.XPath(@"//div[contains(@class,'profile_small_header_avatar')]/div/div/div/img[contains(@src,'akamai')]");
+            By profilePictureCurrentImageSelector = By.XPath(@"//div[contains(@class,'profile_small_header_avatar')]/div/div/img[contains(@src,'avatar')]");
             By saveButtonSelector = By.XPath(profileSaveButtonXpath);
 
             GoToEditProfilePage();
