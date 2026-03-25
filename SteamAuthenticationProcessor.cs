@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading;
-
-using OpenQA.Selenium;
 using SteamGuard.TOTP;
 
 using NuciWeb.Steam.Models;
+using NuciWeb.Automation;
 
 namespace NuciWeb.Steam
 {
@@ -36,7 +35,7 @@ namespace NuciWeb.Steam
                 throw new ArgumentNullException(nameof(totpKey));
             }
 
-            By steamGuardCodeInputSelector = By.XPath(SteamGuardCodeInputXPath);
+            string steamGuardCodeInputSelector = Select.ByXPath(SteamGuardCodeInputXPath);
 
             webProcessor.WaitForElementToBeVisible(steamGuardCodeInputSelector);
             string steamGuardCode = steamGuard.GenerateAuthenticationCode(totpKey);
@@ -54,28 +53,30 @@ namespace NuciWeb.Steam
 
             for (int steamGuardCharIndex = 0; steamGuardCharIndex < 5; steamGuardCharIndex++)
             {
-                By steamGuardCodeCharacterInputSelector = By.XPath($"{SteamGuardCodeInputXPath}/input[{steamGuardCharIndex + 1}]");
+                string steamGuardCodeCharacterInputSelector = Select.ByXPath($"{SteamGuardCodeInputXPath}/input[{steamGuardCharIndex + 1}]");
                 webProcessor.SetText(steamGuardCodeCharacterInputSelector, steamGuardCode[steamGuardCharIndex].ToString());
             }
         }
 
         private void LogInOnPage(SteamAccount account, string url)
         {
+            Console.WriteLine($"Navigating to {url}...");
             webProcessor.GoToUrl(url);
             webProcessor.Wait(TimeSpan.FromSeconds(2));
 
-            By usernameSelector = By.XPath(@"//form/div[1]/input");
-            By passwordSelector = By.XPath(@"//form/div[2]/input");
-            By captchaInputSelector = By.Id("input_captcha");
-            By logInButtonSelector = By.XPath(@"//button[@type='submit']");
-            By steamGuardCodeInputSelector = By.XPath(SteamGuardCodeInputXPath);
-            By avatarSelector = By.XPath(@"//a[contains(@class,'playerAvatar')]");
-            By accountPulldownSelector = By.Id("account_pulldown");
+            string usernameSelector = Select.ByXPath(@"//form/div[1]/div/../input");
+            string passwordSelector = Select.ByXPath(@"//form/div[2]/div/../input");
+            string captchaInputSelector = Select.ById("input_captcha");
+            string logInButtonSelector = Select.ByXPath(@"//form/div[4]/button[@type='submit']");
+            string steamGuardCodeInputSelector = Select.ByXPath(SteamGuardCodeInputXPath);
+            string avatarSelector = Select.ByXPath(@"//a[contains(@class,'playerAvatar')]");
+            string accountPulldownSelector = Select.ById("account_pulldown");
 
             webProcessor.WaitForAnyElementToBeVisible(usernameSelector, avatarSelector);
 
             if (webProcessor.AreAllElementsVisible(avatarSelector, accountPulldownSelector))
             {
+                Console.WriteLine("Existing session detected. Validating current session...");
                 ValidateCurrentSession(account.Username);
                 return;
             }
@@ -102,8 +103,8 @@ namespace NuciWeb.Steam
 
         void ValidateCurrentSession(string expectedUsername)
         {
-            By accountPulldownSelector = By.Id("account_pulldown");
-            By onlinePersonaSelector = By.XPath("//span[contains(@class,'persona_name_text_content')]");
+            string accountPulldownSelector = Select.ById("account_pulldown");
+            string onlinePersonaSelector = Select.ByClass("persona_name_text_content");
 
             webProcessor.Click(accountPulldownSelector);
             webProcessor.WaitForAnyElementToBeVisible(onlinePersonaSelector);
@@ -118,9 +119,9 @@ namespace NuciWeb.Steam
 
         void ValidateLogInResult()
         {
-            By avatarSelector = By.XPath("//a[contains(@class,'user_avatar')]");
-            By errorBoxSelector = By.Id("error_display");
-            By steamGuardIncorrectMessageSelector = By.Id("login_twofactorauth_message_incorrectcode");
+            string avatarSelector = Select.ByClass("user_avatar");
+            string errorBoxSelector = Select.ById("error_display");
+            string steamGuardIncorrectMessageSelector = Select.ById("login_twofactorauth_message_incorrectcode");
 
             webProcessor.WaitForAnyElementToBeVisible(
                 avatarSelector,

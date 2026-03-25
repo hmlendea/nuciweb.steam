@@ -15,8 +15,13 @@
 
   <ItemGroup>
     <PackageReference Include="NuciExtensions" Version="5.0.0" />
-    <PackageReference Include="NuciWeb" Version="3.1.0" />
+    <PackageReference Include="NuciWeb" Version="4.0.0" />
     <PackageReference Include="SteamGuard.TOTP" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../nuciweb.automation/NuciWeb.Automation.csproj" />
+    <ProjectReference Include="../nuciweb.automation.selenium/NuciWeb.Automation.Selenium.csproj" />
   </ItemGroup>
 
 </Project>

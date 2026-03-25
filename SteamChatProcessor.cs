@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using NuciWeb.Automation;
 
 namespace NuciWeb.Steam
 {
@@ -9,7 +9,7 @@ namespace NuciWeb.Steam
         public void Visit()
         {
             webProcessor.GoToUrl(SteamUrls.Chat);
-            webProcessor.WaitForElementToExist(By.ClassName("currentUserAvatar"));
+            webProcessor.WaitForElementToExist(Select.ByClass("currentUserAvatar"));
         }
     }
 }

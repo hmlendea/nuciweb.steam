@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using NuciWeb.Automation;
 
 namespace NuciWeb.Steam
 {
@@ -10,10 +10,10 @@ namespace NuciWeb.Steam
         {
             GoToWorksopItemPage(workshopItemId);
 
-            By favouriteButton1Selector = By.Id("FavoriteItemOptionAdd");
-            By favouriteButton2Selector = By.Id("FavoriteItemBtn");
-            By unfavouriteButtonSelector = By.Id("FavoriteItemOptionFavorited");
-            By favouritedNoticeSelector = By.Id("JustFavorited");
+            string favouriteButton1Selector = Select.ById("FavoriteItemOptionAdd");
+            string favouriteButton2Selector = Select.ById("FavoriteItemBtn");
+            string unfavouriteButtonSelector = Select.ById("FavoriteItemOptionFavorited");
+            string favouritedNoticeSelector = Select.ById("JustFavorited");
 
             webProcessor.WaitForAnyElementToBeVisible(
                 favouriteButton1Selector,
@@ -36,12 +36,12 @@ namespace NuciWeb.Steam
         {
             GoToWorksopItemPage(workshopItemId);
 
-            By subscribeButton1Selector = By.Id("SubscribeItemOptionAdd");
-            By subscribeButton2Selector = By.Id("SubscribeItemBtn");
-            By unsubscribeButtonSelector = By.Id("SubscribeItemOptionSubscribed");
-            By subscribedNoticeSelector = By.Id("JustSubscribed");
-            By modalDialogSelector = By.ClassName("newmodal");
-            By requiredItemSelector = By.ClassName("requiredItem");
+            string subscribeButton1Selector = Select.ById("SubscribeItemOptionAdd");
+            string subscribeButton2Selector = Select.ById("SubscribeItemBtn");
+            string unsubscribeButtonSelector = Select.ById("SubscribeItemOptionSubscribed");
+            string subscribedNoticeSelector = Select.ById("JustSubscribed");
+            string modalDialogSelector = Select.ByClass("newmodal");
+            string requiredItemSelector = Select.ByClass("requiredItem");
 
             webProcessor.WaitForAnyElementToBeVisible(
                 subscribeButton1Selector,
@@ -63,7 +63,7 @@ namespace NuciWeb.Steam
 
             if (webProcessor.AreAllElementsVisible(modalDialogSelector, requiredItemSelector))
             {
-                By continueButtonSelector = By.XPath("//div[@class='newmodal_buttons']/div[1]/span");
+                string continueButtonSelector = Select.ByXPath("//div[@class='newmodal_buttons']/div[1]/span");
                 webProcessor.Click(continueButtonSelector);
             }
 
@@ -74,7 +74,7 @@ namespace NuciWeb.Steam
         {
             string workshopItemUrl = string.Format(SteamUrls.WorkshopItemFormat, workshopItemId);
 
-            By mainContentSelector = By.Id("mainContents");
+            string mainContentSelector = Select.ById("mainContents");
 
             webProcessor.GoToUrl(workshopItemUrl);
             webProcessor.WaitForElementToBeVisible(mainContentSelector);

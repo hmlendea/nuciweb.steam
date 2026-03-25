@@ -1,5 +1,4 @@
-using OpenQA.Selenium;
-
+using NuciWeb.Automation;
 using NuciWeb.Steam.Models;
 
 namespace NuciWeb.Steam
@@ -28,13 +27,13 @@ namespace NuciWeb.Steam
         public void AcceptCookies()
         {
             webProcessor.GoToUrl(SteamUrls.CookiePreferences);
-            webProcessor.Click(By.XPath("//div[@class='account_settings_container']/div/div[2]"));
+            webProcessor.Click(Select.ByXPath("//div[@class='account_settings_container']/div/div[2]"));
         }
 
         public void RejectCookies()
         {
             webProcessor.GoToUrl(SteamUrls.CookiePreferences);
-            webProcessor.Click(By.XPath("//div[@class='account_settings_container']/div/div[1]"));
+            webProcessor.Click(Select.ByXPath("//div[@class='account_settings_container']/div/div[1]"));
         }
 
         public void VisitChat()
