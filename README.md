@@ -19,3 +19,7 @@ dotnet add package NuciWeb.Steam
 ```powershell
 Install-Package NuciWeb.Steam
 ```
+
+## License
+
+This project is licensed under the `GNU General Public License v3.0` or later. See [LICENSE](./LICENSE) for details.
