@@ -1,6 +1,7 @@
 using NuciWeb.Automation;
+using NuciWeb.Steam.Utils;
 
-namespace NuciWeb.Steam
+namespace NuciWeb.Steam.Processors
 {
     internal sealed class SteamWorkshopProcessor(IWebProcessor webProcessor) : ISteamWorkshopProcessor
     {
