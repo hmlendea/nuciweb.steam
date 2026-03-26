@@ -28,7 +28,7 @@ namespace NuciWeb.Steam
         {
             string profilePictureTabSelector = Select.ByXPath(@"//a[contains(@href,'/edit/avatar')]");
             string profilePictureInputSelector = Select.ByXPath(@"//input[@type='file']");
-            string profilePictureNewImageSelector = Select.ByXPath(@"//div[contains(@class,'DialogBody')]/div/div[3]/div[1]/div[1]/div/img[contains(@src,'avatar')]");
+            string profilePictureNewImageSelector = Select.ByXPath(@"//div[contains(@class,'DialogBody')]/div/div/div[3]/div[1]/div[1]/div/img[contains(@src,'avatar')]");
             string profilePictureCurrentImageSelector = Select.ByXPath(@"//div[contains(@class,'profile_small_header_avatar')]/div/div/img[contains(@src,'avatar')]");
             string saveButtonSelector = Select.ByXPath(profileSaveButtonXpath);
 
