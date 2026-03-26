@@ -110,7 +110,7 @@ namespace NuciWeb.Steam.Processors
         void ValidateCurrentSession(string expectedUsername)
         {
             string accountPulldownSelector = Select.ById("account_pulldown");
-            string onlinePersonaSelector = Select.ByClass("persona_name_text_content");
+            string onlinePersonaSelector = Select.ByXPath(@"//div[@class='popup_body popup_menu']/a[2]/span[@class='account_name']");
 
             webProcessor.Click(accountPulldownSelector);
             webProcessor.WaitForAnyElementToBeVisible(onlinePersonaSelector);
@@ -119,7 +119,7 @@ namespace NuciWeb.Steam.Processors
 
             if (!currentUsername.Equals(expectedUsername, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new AuthenticationException("Already logged in as a different user.");
+                throw new AuthenticationException($"Already logged in as a different user ('{currentUsername}').");
             }
         }
 
