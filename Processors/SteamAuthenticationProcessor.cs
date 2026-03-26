@@ -85,6 +85,13 @@ namespace NuciWeb.Steam.Processors
                 throw new AuthenticationException("Captcha input required.");
             }
 
+            string rejectCookiesButtonSelector = Select.ById("rejectAllButton");
+
+            if (webProcessor.DoesElementExist(rejectCookiesButtonSelector))
+            {
+                webProcessor.Click(rejectCookiesButtonSelector);
+            }
+
             webProcessor.SetText(usernameSelector, account.Username);
             webProcessor.SetText(passwordSelector, account.Password);
 
