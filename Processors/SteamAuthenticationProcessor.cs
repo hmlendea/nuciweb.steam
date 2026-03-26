@@ -61,7 +61,6 @@ namespace NuciWeb.Steam.Processors
 
         private void LogInOnPage(SteamAccount account, string url)
         {
-            Console.WriteLine($"Navigating to {url}...");
             webProcessor.GoToUrl(url);
             webProcessor.Wait(TimeSpan.FromSeconds(2));
 
@@ -77,7 +76,6 @@ namespace NuciWeb.Steam.Processors
 
             if (webProcessor.AreAllElementsVisible(avatarSelector, accountPulldownSelector))
             {
-                Console.WriteLine("Existing session detected. Validating current session...");
                 ValidateCurrentSession(account.Username);
                 return;
             }
@@ -85,6 +83,13 @@ namespace NuciWeb.Steam.Processors
             if (webProcessor.IsElementVisible(captchaInputSelector))
             {
                 throw new AuthenticationException("Captcha input required.");
+            }
+
+            string rejectCookiesButtonSelector = Select.ById("rejectAllButton");
+
+            if (webProcessor.DoesElementExist(rejectCookiesButtonSelector))
+            {
+                webProcessor.Click(rejectCookiesButtonSelector);
             }
 
             webProcessor.SetText(usernameSelector, account.Username);
