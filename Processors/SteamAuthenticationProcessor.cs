@@ -6,6 +6,7 @@ using SteamGuard.TOTP;
 
 using NuciWeb.Steam.Models;
 using NuciWeb.Automation;
+using NuciWeb.Steam.Utils;
 
 namespace NuciWeb.Steam.Processors
 {

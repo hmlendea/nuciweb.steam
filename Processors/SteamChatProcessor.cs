@@ -1,4 +1,5 @@
 using NuciWeb.Automation;
+using NuciWeb.Steam.Utils;
 
 namespace NuciWeb.Steam.Processors
 {

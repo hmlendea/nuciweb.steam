@@ -1,4 +1,4 @@
-namespace NuciWeb.Steam
+namespace NuciWeb.Steam.Utils
 {
     internal sealed class SteamUrls
     {
