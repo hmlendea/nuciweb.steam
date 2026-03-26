@@ -4,7 +4,15 @@
 
 ## About
 
-NuGet package to execute common Steam operations using [NuciWeb](https://github.com/hmlendea/nuciweb).
+NuGet package that provides high-level Steam account automation flows on top of [NuciWeb](https://github.com/hmlendea/nuciweb) (`IWebProcessor`).
+
+It automates common account tasks such as:
+- signing in to Steam *(including Steam Guard TOTP)*
+- accepting or rejecting cookie preferences
+- opening Steam Chat
+- activating product keys *(with typed activation error handling)*
+- updating profile name, custom profile URL, and avatar
+- favoriting and subscribing to Workshop items
 
 ## Installation
 
