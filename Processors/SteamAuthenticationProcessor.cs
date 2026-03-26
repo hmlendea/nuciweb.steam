@@ -119,7 +119,7 @@ namespace NuciWeb.Steam.Processors
 
             if (!currentUsername.Equals(expectedUsername, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new AuthenticationException("Already logged in as a different user.");
+                throw new AuthenticationException($"Already logged in as a different user ('{currentUsername}').");
             }
         }
 
