@@ -7,7 +7,7 @@ using SteamGuard.TOTP;
 using NuciWeb.Steam.Models;
 using NuciWeb.Automation;
 
-namespace NuciWeb.Steam
+namespace NuciWeb.Steam.Processors
 {
     internal sealed class SteamAuthenticationProcessor(
         IWebProcessor webProcessor,
