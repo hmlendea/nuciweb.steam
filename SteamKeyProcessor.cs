@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+using NuciWeb.Automation;
 
 namespace NuciWeb.Steam
 {
@@ -8,14 +8,14 @@ namespace NuciWeb.Steam
 
         public string ActivateKey(string key)
         {
-            By keyInputSelector = By.Id("product_key");
-            By keyActivationButtonSelector = By.Id("register_btn");
-            By agreementCheckboxSelector = By.Id("accept_ssa");
+            string keyInputSelector = Select.ById("product_key");
+            string keyActivationButtonSelector = Select.ById("register_btn");
+            string agreementCheckboxSelector = Select.ById("accept_ssa");
 
-            By errorSelector = By.Id("error_display");
-            By receiptSelector = By.Id("receipt_form");
+            string errorSelector = Select.ById("error_display");
+            string receiptSelector = Select.ById("receipt_form");
 
-            By productNameSelector = By.ClassName("registerkey_lineitem");
+            string productNameSelector = Select.ByClass("registerkey_lineitem");
 
             if (!webProcessor.IsElementVisible(keyInputSelector))
             {
@@ -36,7 +36,7 @@ namespace NuciWeb.Steam
 
         void ValidateKeyActivation()
         {
-            By errorSelector = By.Id("error_display");
+            string errorSelector = Select.ById("error_display");
 
             if (!webProcessor.IsElementVisible(errorSelector))
             {
