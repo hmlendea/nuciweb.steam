@@ -18,7 +18,7 @@ namespace NuciWeb.Steam.Processors
         readonly ISteamGuard steamGuard = steamGuard;
         readonly IList<string> UsedSteamGuardCodes = [];
 
-        static string SteamGuardCodeInputXPath => @"//form/div/div/div/div/input/..";
+        static string SteamGuardCodeInputXPath => @"//form/section/div[2]/section/div/input/..";
 
         public SteamAuthenticationProcessor(IWebProcessor webProcessor)
             : this(webProcessor, new SteamGuard.TOTP.SteamGuard()) { }
@@ -64,8 +64,8 @@ namespace NuciWeb.Steam.Processors
             webProcessor.GoToUrl(url);
             webProcessor.Wait(TimeSpan.FromSeconds(2));
 
-            string usernameSelector = Select.ByXPath(@"//form/div[1]/div/../input");
-            string passwordSelector = Select.ByXPath(@"//form/div[2]/div/../input");
+            string usernameSelector = Select.ByXPath(@"//form/div[1]/label/../input");
+            string passwordSelector = Select.ByXPath(@"//form/div[2]/label/../input");
             string captchaInputSelector = Select.ById("input_captcha");
             string logInButtonSelector = Select.ByXPath(@"//form/div[4]/button[@type='submit']");
             string steamGuardCodeInputSelector = Select.ByXPath(SteamGuardCodeInputXPath);
