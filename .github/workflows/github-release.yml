@@ -1,0 +1,69 @@
+name: GitHub Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  pack:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    env:
+      NUGET_PACKAGE_NAME: NuciWeb.Steam
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Extract the version from the GitHub tag
+      id: version
+      run: |
+        VERSION="${{ github.ref_name }}"
+        VERSION="${VERSION#v}"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Restore the dependencies
+      run: dotnet restore
+
+    - name: Create the NuGet package
+      run: dotnet pack -c Release --output ./nupkg -p:Version=${{ steps.version.outputs.version }}
+
+    - name: Calculate the SHA256 checksum
+      id: checksum
+      run: |
+        NUPKG_FILE="./nupkg/${NUGET_PACKAGE_NAME}.${{ steps.version.outputs.version }}.nupkg"
+        SHA256=$(sha256sum "$NUPKG_FILE" | awk '{print $1}')
+        echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+
+    - name: Upload the package to the GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release upload "${{ github.event.release.tag_name }}" "./nupkg/${NUGET_PACKAGE_NAME}.${{ steps.version.outputs.version }}.nupkg" --clobber
+
+    - name: Append the SHA256 checksum to the GitHub Release notes
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const releaseId = context.payload.release.id;
+          const currentBody = context.payload.release.body;
+          const newChecksum = "${{ steps.checksum.outputs.sha256 }}";
+          const checksumLine = `\n\n**SHA256 Checksum:** ${newChecksum}`;
+          const updatedBody = currentBody + checksumLine;
+
+          await github.rest.repos.updateRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: releaseId,
+            body: updatedBody
+          });
