@@ -31,3 +31,17 @@ Install-Package NuciWeb.Steam
 ## License
 
 This project is licensed under the `GNU General Public License v3.0` or later. See [LICENSE](./LICENSE) for details.
+
+## 🛡️ Privacy and Data
+
+NuciWeb.Steam is a .NET library that automates Steam account operations. It processes Steam account credentials and profile data provided by the calling application and communicates exclusively with Steam services (steamcommunity.com, store.steampowered.com, api.steampowered.com) over HTTPS. The library does not persist, log, or transmit personal data to any third party or to the project maintainers.
+
+For the detailed description of how the application handles privacy and personal data, see [PRIVACY.md](./PRIVACY.md).
+
+| Data | Purpose | Storage | Retention | Optional |
+|------|---------|---------|-----------|----------|
+| Steam account credentials (username, password, Steam Guard shared secret) | Authentication with Steam services | Transient in-memory only | Duration of operation | No |
+| Profile data (display name, custom URL, avatar) | Profile updates | Transient in-memory only | Duration of operation | Yes |
+| Product keys | Product key activation | Transient in-memory only | Duration of operation | Yes |
+| Workshop item identifiers | Workshop interactions (favorite, subscribe) | Transient in-memory only | Duration of operation | Yes |
+| HTTP request/response data with Steam services | Automation flow execution | Transient in-memory only | Duration of operation | No |
