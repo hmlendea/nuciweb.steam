@@ -22,7 +22,7 @@ NuGet package that provides high-level Steam account automation flows on top of 
 - [GitHub Actions](#github-actions)
 - [Project Structure](#project-structure)
   - [Projects and Packages](#projects-and-packages)
-- [Roadmap](#roadmap)
+- [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security](#security)
@@ -113,9 +113,9 @@ The `dotnet.yml` workflow runs on every push and pull request. It restores depen
 |---------|------|---------|
 | `NuciWeb.Steam/` | Library | Main NuGet package providing Steam automation flows |
 
-## 🗺️ Roadmap
+## 🏗️ Architecture
 
-See [ROADMAP.md](./ROADMAP.md) for planned work and forthcoming changes.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the system architecture documentation.
 
 ## 🤝 Contributing
 
