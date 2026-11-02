@@ -1,36 +1,67 @@
-[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html) [![Build Status](https://github.com/hmlendea/nuciweb.steam/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciweb.steam/actions/workflows/dotnet.yml) [![Latest GitHub release](https://img.shields.io/github/v/release/hmlendea/nuciweb.steam)](https://github.com/hmlendea/nuciweb.steam/releases/latest)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
+[![Build Status](https://github.com/hmlendea/nuciweb.steam/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nuciweb.steam/actions/workflows/dotnet.yml)
+[![Latest Release](https://img.shields.io/github/v/release/hmlendea/nuciweb.steam)](https://github.com/hmlendea/nuciweb.steam/releases/latest)
+[![License](https://img.shields.io/github/license/hmlendea/nuciweb.steam)](https://github.com/hmlendea/nuciweb.steam/blob/master/LICENSE)
 
 # NuciWeb.Steam
 
-## About
-
 NuGet package that provides high-level Steam account automation flows on top of [NuciWeb](https://github.com/hmlendea/nuciweb) (`IWebProcessor`).
 
-It automates common account tasks such as:
-- signing in to Steam *(including Steam Guard TOTP)*
-- accepting or rejecting cookie preferences
-- opening Steam Chat
-- activating product keys *(with typed activation error handling)*
-- updating profile name, custom profile URL, and avatar
-- favoriting and subscribing to Workshop items
+## 📑 Table of Contents
 
-## Installation
+- [Capabilities](#capabilities)
+- [Usage](#usage)
+- [Installation](#installation)
+  - [Package Manager Installation](#package-manager-installation)
+- [Privacy and Data](#privacy-and-data)
+- [Development](#development)
+  - [Requirements](#requirements)
+  - [Build](#build)
+  - [Test](#test)
+  - [Continuous Integration](#continuous-integration)
+- [GitHub Actions](#github-actions)
+- [Project Structure](#project-structure)
+  - [Projects and Packages](#projects-and-packages)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [Security](#security)
+- [Project Engagement](#project-engagement)
+- [License](#license)
 
-[![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciWeb.Steam)
+## ✨ Capabilities
 
-**.NET CLI**:
+- Signing in to Steam (including Steam Guard TOTP)
+- Accepting or rejecting cookie preferences
+- Opening Steam Chat
+- Activating product keys (with typed activation error handling)
+- Updating profile name, custom profile URL, and avatar
+- Favoriting and subscribing to Workshop items
+
+## 🚀 Usage
+
+```csharp
+using NuciWeb.Steam;
+
+var processor = new SteamProcessor();
+await processor.SignInAsync("username", "password", "sharedSecret");
+await processor.ActivateKeyAsync("AAAAA-BBBBB-CCCCC");
+```
+
+## 📦 Installation
+
+[![Obtain it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciWeb.Steam)
+
+### Package Manager Installation
+
 ```bash
 dotnet add package NuciWeb.Steam
 ```
 
-**Package Manager**:
+Or, via the `Package Manager Console`:
 ```powershell
 Install-Package NuciWeb.Steam
 ```
-
-## License
-
-This project is licensed under the `GNU General Public License v3.0` or later. See [LICENSE](./LICENSE) for details.
 
 ## 🛡️ Privacy and Data
 
@@ -45,6 +76,46 @@ For the detailed description of how the application handles privacy and personal
 | Product keys | Product key activation | Transient in-memory only | Duration of operation | Yes |
 | Workshop item identifiers | Workshop interactions (favorite, subscribe) | Transient in-memory only | Duration of operation | Yes |
 | HTTP request/response data with Steam services | Automation flow execution | Transient in-memory only | Duration of operation | No |
+
+## 🛠️ Development
+
+### Requirements
+
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+
+### Build
+
+```bash
+dotnet build NuciWeb.Steam.slnx
+```
+
+### Test
+
+```bash
+dotnet test NuciWeb.Steam.slnx
+```
+
+### Continuous Integration
+
+The `dotnet.yml` workflow runs on every push and pull request. It restores dependencies, builds the solution, and runs tests. Reproduce locally with the Build and Test commands above.
+
+## ⚙️ GitHub Actions
+
+| Workflow | Purpose | What it does |
+|----------|---------|--------------|
+| [ dotnet.yml ](https://github.com/hmlendea/nuciweb.steam/blob/master/.github/workflows/dotnet.yml) | Build and test | Restores dependencies, builds the solution, and runs tests on every push and pull request |
+
+## 🗂️ Project Structure
+
+### Projects and Packages
+
+| Project | Type | Purpose |
+|---------|------|---------|
+| `NuciWeb.Steam/` | Library | Main NuGet package providing Steam automation flows |
+
+## 🗺️ Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) for planned work and forthcoming changes.
 
 ## 🤝 Contributing
 
@@ -71,3 +142,16 @@ See the [Code of Conduct](./CODE_OF_CONDUCT.md) for the standards of conduct exp
 NuciWeb.Steam follows a coordinated disclosure policy for security vulnerabilities. Only the latest version distributed via NuGet and GitHub Releases receives security maintenance.
 
 For information on reporting security vulnerabilities, see [SECURITY.md](./SECURITY.md).
+
+## 💝 Project Engagement
+
+Discovered a problem or have a suggestion? [Open an issue](https://github.com/hmlendea/nuciweb.steam/issues)!
+
+If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or starring ⭐️ it on GitHub!
+
+[![Donate](https://raw.githubusercontent.com/hmlendea/readme-assets/master/donate_generic.png)](https://hmlendea.go.ro/funding)
+
+## 📄 License
+
+This project is being distributed under the `GNU General Public License v3.0` or later.
+See [LICENSE](./LICENSE) for additional information.
