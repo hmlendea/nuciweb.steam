@@ -92,6 +92,10 @@ dotnet test --no-build --verbosity normal
 
 By contributing, you agree that your contributions will be licensed under the GNU General Public License v3.0 or later.
 
+## 📋 Code of Conduct
+
+This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 ## ❓ Getting Assistance
 
 - Open a GitHub issue for questions or discussions.
