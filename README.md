@@ -65,3 +65,9 @@ See the [contributing guidelines](./CONTRIBUTING.md) for details on how to repor
 ## 📜 Code of Conduct
 
 See the [Code of Conduct](./CODE_OF_CONDUCT.md) for the standards of conduct expected in all project spaces.
+
+## 🔒 Security
+
+NuciWeb.Steam follows a coordinated disclosure policy for security vulnerabilities. Only the latest version distributed via NuGet and GitHub Releases receives security maintenance.
+
+For information on reporting security vulnerabilities, see [SECURITY.md](./SECURITY.md).
