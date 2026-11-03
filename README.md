@@ -117,6 +117,19 @@ The `dotnet.yml` workflow runs on every push and pull request. It restores depen
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the system architecture documentation.
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+- [Quick Start](./docs/quick-start.md) — Getting started guide
+- [API Reference](./docs/api-reference/steam-processor.md) — Public API methods and contracts
+- [Architecture](./docs/architecture.md) — Implementation-level architecture
+- [Flows](./docs/flows/) — End-to-end execution flows
+- [Components](./docs/components/) — Per-component deep dives
+- [Troubleshooting](./docs/troubleshooting.md) — Common issues and solutions
+- [FAQ](./docs/faq.md) — Frequently asked questions
+- [Full Index](./docs/INDEX.md) — Complete documentation catalogue
+
 ## 🤝 Contributing
 
 You are welcome to submit any suggestion, feedback, or modification to this project.
