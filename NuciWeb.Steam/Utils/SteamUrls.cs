@@ -1,6 +1,6 @@
 namespace NuciWeb.Steam.Utils
 {
-    internal sealed class SteamUrls
+    public static class SteamUrls
     {
         public static string Store => "https://store.steampowered.com";
         public static string Community => "https://steamcommunity.com";
